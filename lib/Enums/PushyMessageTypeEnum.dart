@@ -1,0 +1,19 @@
+enum PushyMessageTypeEnum {
+  None,
+  GateStatus,
+  SendJobCard,
+  ConfirmAppUsage,
+  ActualJobError,
+  WeightCardIncoming,
+  ExitThePort,
+  GateStatusReject,
+  GateStatusMoveTroubleGate,
+  GateStatusMoveToManualInspect,
+  GateStatusMoveToCustom,
+  GateStatusSendToPort,
+  GateStatusExit,
+  NotAcceptedApp,
+  GateStatusSendSupport,
+  WaitingJobCard,
+  SuccessfullyVerified
+}
