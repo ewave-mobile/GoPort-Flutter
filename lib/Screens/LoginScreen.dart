@@ -174,8 +174,8 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           screenMode = ScreenMode.Otp;
         });
-        Utils.showToast(
-            AppLocalizations.of(context).translate("We've sent an SMS code your phone number"));
+        Utils.showToast(AppLocalizations.of(context)
+            .translate("We've sent an SMS code your phone number"));
       } else if (res == 1) {
         Utils.showToast(
             AppLocalizations.of(context).translate("User does not exist"));
@@ -246,7 +246,8 @@ class _LoginScreenState extends State<LoginScreen> {
       prefs.setString(Const.prefsSerialNumber, sn);
     }
 
-    final generalProvider = Provider.of<GeneralProvider>(context, listen: false);
+    final generalProvider =
+        Provider.of<GeneralProvider>(context, listen: false);
     generalProvider.serialNumber = sn;
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -404,7 +405,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Row(
                           children: [
                             Text(
-                        "${AppLocalizations.of(context).translate("Version")} $_version ${_truck != null ? "| ${AppLocalizations.of(context).translate("Truck")} $_truck" : ""}",
+                              "${AppLocalizations.of(context).translate("Version")} $_version ${_truck != null ? "| ${AppLocalizations.of(context).translate("Truck")} $_truck" : ""}",
                               style: TextStyle(
                                   color: colorGray,
                                   fontWeight: FontWeight.bold,
@@ -421,7 +422,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    AppLocalizations.of(context).translate("S. number"),
+                                    AppLocalizations.of(context)
+                                        .translate("S. number"),
                                     style: TextStyle(
                                         color: colorGray,
                                         fontWeight: FontWeight.bold,

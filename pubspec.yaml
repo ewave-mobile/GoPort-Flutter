@@ -83,6 +83,7 @@ flutter:
     - assets/locale/en.json
     - assets/locale/he.json
     - assets/locale/ru.json
+    - assets/locale/ar.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -79,7 +79,8 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    final generalProvider = Provider.of<GeneralProvider>(context, listen: false);
+    final generalProvider =
+        Provider.of<GeneralProvider>(context, listen: false);
     if (state == AppLifecycleState.resumed) {
       generalProvider.setShowBackButton(false);
       _checkExistsDraft();
@@ -115,7 +116,8 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
       guidID = guidID.replaceAll("\"", "");
       generalProvider.setShowBackButton(true);
       WidgetsBinding.instance.removeObserver(this);
-      await Navigator.of(context).pushNamed("JobCardScreen", arguments: {"guidID": guidID});
+      await Navigator.of(context)
+          .pushNamed("JobCardScreen", arguments: {"guidID": guidID});
       WidgetsBinding.instance.addObserver(this);
       generalProvider.setShowBackButton(false);
       _checkJobCardExists();
@@ -129,11 +131,12 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
     final SharedPreferences prefs = await _prefs;
     Truck truck;
     Truck trailer;
-    if (prefs.getString(Const.prefsTruck)!= null) {
+    if (prefs.getString(Const.prefsTruck) != null) {
       truck = Truck.fromJson(jsonDecode(prefs.getString(Const.prefsTruck)));
     }
-    if (prefs.getString(Const.prefsTrailer)!= null) {
-      trailer =  Truck.fromJson(jsonDecode(prefs.getString(Const.prefsTrailer)));
+    if (prefs.getString(Const.prefsTrailer) != null &&
+        prefs.getString(Const.prefsTrailer) != "null") {
+      trailer = Truck.fromJson(jsonDecode(prefs.getString(Const.prefsTrailer)));
     }
 
     String fullName = "";
@@ -149,6 +152,8 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
 
     if (truck != null && trailer != null) {
       _getVehicleDetails(truck.num, trailer.num);
+    } else if (truck != null) {
+      _getVehicleDetails(truck.num, "");
     }
 
     EventResponse res = await GoPortApi.instance.getEvents();
@@ -183,23 +188,18 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
       } else {
         generalProvider.setTruck(res.truck);
         generalProvider.setTrailer(res.trailer);
-
-        // generalProvider.truck = res.truck;
-        // generalProvider.trailer = res.trailer;
-
-        if (driver.companyNumber != generalProvider.truck.companyNumber ||
-            (trailer != null &&
-                driver.companyNumber !=
-                    generalProvider.trailer.companyNumber)) {
-          // generalProvider.truck = null;
-          // generalProvider.trailer = null;
+        if (driver.companyNumber != generalProvider.truck.companyNumber) {
           generalProvider.setTruck(null);
           generalProvider.setTrailer(null);
           Utils.showAlertDialog(
               context: context,
               message: AppLocalizations.of(context)
                   .translate("Truck or Trailer Number Not Match"));
+          _controlsEnabled = false;
         } else {
+          // generalProvider.truck = res.truck;
+          // generalProvider.trailer = res.trailer;
+
           _initializeData();
           setState(() {
             _controlsEnabled = true;
@@ -272,14 +272,13 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
     });
 
     final generalProvider =
-    Provider.of<GeneralProvider>(context, listen: false);
+        Provider.of<GeneralProvider>(context, listen: false);
     final driver = generalProvider.driver;
     final res = await GoPortApi.instance.getDriverGuidID(driver.tz);
 
     setState(() {
       _loading = false;
     });
-
 
     if (res != null && res != "null") {
       generalProvider.setShowBackButton(true);
@@ -288,12 +287,14 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
       generalProvider.setShowBackButton(false);
       _checkJobCardExists();
     } else {
-      Utils.showAlertDialog(context: context, title: AppLocalizations.of(context)
-          .translate("You are not in the port area"));
+      Utils.showAlertDialog(
+          context: context,
+          title: AppLocalizations.of(context)
+              .translate("You are not in the port area"));
     }
   }
 
-  onContainersTapped() async{
+  onContainersTapped() async {
     if (_controlsEnabled) {
       final generalProvider =
           Provider.of<GeneralProvider>(context, listen: false);
@@ -446,7 +447,9 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
                                                 width: 40,
                                                 fit: BoxFit.contain,
                                               ),
-                                              SizedBox(height: 10,),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
                                               Text(
                                                 AppLocalizations.of(context)
                                                     .translate("Containers"),

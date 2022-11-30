@@ -9,7 +9,13 @@ class AppDialog extends StatelessWidget {
   VoidCallback onOK;
   VoidCallback onCancel;
 
-  AppDialog({this.title, this.message, this.okButton = "OK", this.onOK, this.cancelButton, this.onCancel});
+  AppDialog(
+      {this.title,
+      this.message,
+      this.okButton = "OK",
+      this.onOK,
+      this.cancelButton,
+      this.onCancel});
 
   TextStyle textStyle = TextStyle(color: Colors.black);
 
@@ -32,7 +38,7 @@ class AppDialog extends StatelessWidget {
             style: textStyle,
           ),
           actions: <Widget>[
-            new FlatButton(
+            new TextButton(
               child: new Text(this.okButton),
               onPressed: () {
                 Navigator.pop(context);
@@ -41,15 +47,17 @@ class AppDialog extends StatelessWidget {
                 }
               },
             ),
-            this.cancelButton != null ? new FlatButton(
-              child: Text(this.cancelButton),
-              onPressed: () {
-                Navigator.of(context).pop();
-                if (onCancel != null) {
-                  onCancel();
-                }
-              },
-            ) : Container(),
+            this.cancelButton != null
+                ? new TextButton(
+                    child: Text(this.cancelButton),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      if (onCancel != null) {
+                        onCancel();
+                      }
+                    },
+                  )
+                : Container(),
           ],
         ));
   }

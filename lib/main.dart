@@ -239,7 +239,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   _onShowLanguage() async {
-    List<String> languages = ["English", "עברית", "Русский"];
+    List<String> languages = ["English", "עברית", "Русский", "عربي"];
     Locale _locale = Locale(Platform.localeName);
     int selectedIndex;
 
@@ -252,6 +252,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         break;
       case "ru":
         selectedIndex = 2;
+        break;
+      case "ar":
+        selectedIndex = 3;
         break;
     }
 
@@ -282,6 +285,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       case "Русский":
         MyApp.setLocale(_navigatorKey.currentContext,
             Locale.fromSubtags(languageCode: "ru"));
+        break;
+      case "عربي":
+        MyApp.setLocale(_navigatorKey.currentContext,
+            Locale.fromSubtags(languageCode: "ar"));
         break;
     }
   }
@@ -361,10 +368,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         generalProvider.setTruck(res.truck);
         generalProvider.setTrailer(res.trailer);
 
-        if (driver.companyNumber != generalProvider.truck.companyNumber ||
-            (trailer != null &&
-                driver.companyNumber !=
-                    generalProvider.trailer.companyNumber)) {
+        if (driver.companyNumber != generalProvider.truck.companyNumber) {
           generalProvider.setTruck(null);
           generalProvider.setTrailer(null);
           Utils.showAlertDialog(
@@ -424,7 +428,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       supportedLocales: [
         const Locale('en', 'EN'),
         const Locale('he', 'HE'),
-        const Locale('ru', 'RU')
+        const Locale('ru', 'RU'),
+        const Locale('ar', 'AR')
       ],
       locale: _locale,
       localeResolutionCallback:
