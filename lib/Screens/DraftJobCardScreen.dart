@@ -21,7 +21,7 @@ import 'package:goport/Network/GoPortApi.dart';
 import 'package:goport/Providers/GeneralProvider.dart';
 import 'package:goport/Screens/ActionTypeScreen.dart';
 import 'package:intl/intl.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,7 +40,7 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
   int _notTakePhotoReasonId = -1;
   bool _loading = false;
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  TabController _tabController;
+  TabController? _tabController;
   List<BottomNavViewItem> navViewItems = [];
 
   @override
@@ -62,7 +62,7 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
   }
 
   _initialize() async {
-    final arguments = ModalRoute.of(context).settings.arguments as Map;
+    final arguments = ModalRoute.of(context)!.settings.arguments as Map;
 
     setState(() {
       if (arguments.containsKey("notTakePhotoReasonId")) {
@@ -90,8 +90,8 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
             _loading = true;
           });
 
-          bool res =
-              await GoPortApi.instance.deleteDriverDraftContainers(driver.tz);
+          bool res = await GoPortApi.instance
+              .deleteDriverDraftContainers(driver!.tz ?? "");
 
           setState(() {
             _loading = false;
@@ -99,7 +99,7 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
 
           if (res) {
             final generalProvider =
-            Provider.of<GeneralProvider>(context, listen: false);
+                Provider.of<GeneralProvider>(context, listen: false);
             generalProvider.selectedInContainers = [];
             generalProvider.selectedOutContainers = [];
 
@@ -135,9 +135,9 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
       // }
 
       DraftJobCard draft = new DraftJobCard(
-        id: portContainer.draftID,
+        id: portContainer.draftID!,
         containerJobTypeID: 1,
-        driverTZ: driver.tz,
+        driverTZ: driver!.tz,
         containerNo: portContainer.actualCntrNo,
         createDate: DateTime.now(),
       );
@@ -151,11 +151,10 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
           draft.imagePath = portContainer.imagePath;
 
           try {
-            String base64Image = Utils.convertImageToBase64(draft.imagePath);
+            String base64Image =
+                Utils.convertImageToBase64(draft.imagePath ?? "");
             draft.image = base64Image;
-          }  on Exception catch (_) {
-
-          }
+          } on Exception catch (_) {}
         }
       }
       draftsList.add(draft);
@@ -174,9 +173,9 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
       // }
 
       DraftJobCard draft = new DraftJobCard(
-        id: portContainer.draftID,
+        id: portContainer.draftID!,
         containerJobTypeID: 2,
-        driverTZ: driver.tz,
+        driverTZ: driver!.tz,
         containerNo: portContainer.actualCntrNo,
         createDate: DateTime.now(),
       );
@@ -184,9 +183,9 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
     }
 
     SaveContainersToDraft saveContainersToDraft = new SaveContainersToDraft(
-        driverTZ: driver.tz, containersToAdd: draftsList);
+        driverTZ: driver!.tz ?? "", containersToAdd: draftsList);
 
-    String res =
+    String? res =
         await GoPortApi.instance.saveContainersToDraft(saveContainersToDraft);
 
     setState(() {
@@ -198,7 +197,7 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
     if (res == "ok") {
       Utils.showToast(AppLocalizations.of(context).translate("Draft is ready"));
       final generalProvider =
-      Provider.of<GeneralProvider>(context, listen: false);
+          Provider.of<GeneralProvider>(context, listen: false);
       generalProvider.selectedInContainers = [];
       generalProvider.selectedOutContainers = [];
 
@@ -256,7 +255,7 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
                     Column(
                       children: [
                         Text(
-                          item.actualCntrNo,
+                          item.actualCntrNo ?? "",
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 18,
@@ -265,13 +264,16 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
                         SizedBox(
                           height: 2,
                         ),
-                        item.pickUpPlanTime2 != null && item.pickUpPlanTime2 != "" ? Text(
-                          item.pickUpPlanTime2,
-                          style: TextStyle(
-                              color: colorLightGray,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold),
-                        ) : Container(),
+                        item.pickUpPlanTime2 != null &&
+                                item.pickUpPlanTime2 != ""
+                            ? Text(
+                                item.pickUpPlanTime2 ?? "",
+                                style: TextStyle(
+                                    color: colorLightGray,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            : Container(),
                       ],
                     ),
                   ],
@@ -291,7 +293,7 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
                     Container(
                       margin: EdgeInsets.only(right: 10),
                       child: Text(
-                        item.containerType,
+                        item.containerType ?? "",
                         style: TextStyle(
                             color: colorLightGray,
                             fontSize: 15,
@@ -325,7 +327,7 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
                       height: 6,
                     ),
                     Text(
-                      item.shippingAgent,
+                      item.shippingAgent ?? "",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
@@ -346,7 +348,7 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
                       height: 6,
                     ),
                     Text(
-                      item.informationStatus,
+                      item.informationStatus ?? "",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
@@ -367,7 +369,7 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
                       height: 6,
                     ),
                     Text(
-                      item.shipperCompanyName,
+                      item.shipperCompanyName ?? "",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
@@ -376,9 +378,9 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
                     SizedBox(
                       height: 6,
                     ),
-                    item.remarks != null && item.remarks.isNotEmpty
+                    item.remarks != null && item.remarks!.isNotEmpty
                         ? Text(
-                            item.remarks,
+                            item.remarks!,
                             style: TextStyle(
                                 color: colorError,
                                 fontSize: 16,
@@ -430,7 +432,7 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
                     Column(
                       children: [
                         Text(
-                          item.actualCntrNo,
+                          item.actualCntrNo ?? "",
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 18,
@@ -439,13 +441,16 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
                         SizedBox(
                           height: 2,
                         ),
-                        item.pickUpPlanTime2 != null && item.pickUpPlanTime2 != "" ? Text(
-                          item.pickUpPlanTime2,
-                          style: TextStyle(
-                              color: colorLightGray,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold),
-                        ) : Container(),
+                        item.pickUpPlanTime2 != null &&
+                                item.pickUpPlanTime2 != ""
+                            ? Text(
+                                item.pickUpPlanTime2 ?? "",
+                                style: TextStyle(
+                                    color: colorLightGray,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            : Container(),
                       ],
                     ),
                   ],
@@ -453,7 +458,7 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
                 Row(
                   children: [
                     item.fullEmptyContainer != null &&
-                            item.fullEmptyContainer.isNotEmpty
+                            item.fullEmptyContainer!.isNotEmpty
                         ? Image.asset(
                             item.fullEmptyContainer == "EMPTY"
                                 ? "assets/images/ic_box_empty.png"
@@ -468,7 +473,7 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
                     Container(
                       margin: EdgeInsets.only(right: 10),
                       child: Text(
-                        item.size,
+                        item.size ?? "",
                         style: TextStyle(
                             color: colorLightGray,
                             fontSize: 15,
@@ -502,7 +507,7 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
                       height: 6,
                     ),
                     Text(
-                      item.containerType,
+                      item.containerType ?? "",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
@@ -511,9 +516,9 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
                     SizedBox(
                       height: 6,
                     ),
-                    item.remarks != null && item.remarks.isNotEmpty
+                    item.remarks != null && item.remarks!.isNotEmpty
                         ? Text(
-                            item.remarks,
+                            item.remarks!,
                             style: TextStyle(
                                 color: colorError,
                                 fontSize: 16,
@@ -647,9 +652,9 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
                             indicatorSize: TabBarIndicatorSize.tab,
                           ),
                           AnimatedBuilder(
-                              animation: _tabController.animation,
+                              animation: _tabController!.animation!,
                               builder: (ctx, child) {
-                                if (_tabController.index == 0) {
+                                if (_tabController!.index == 0) {
                                   return _buildInListView(context);
                                 } else {
                                   return _buildOutListView(context);

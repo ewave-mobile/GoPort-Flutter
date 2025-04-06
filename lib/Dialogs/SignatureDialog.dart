@@ -14,7 +14,7 @@ class SignatureDialog extends StatefulWidget {
   final Function onConfirm;
   final Function onCancel;
 
-  SignatureDialog({this.onConfirm, this.onCancel});
+  SignatureDialog({required this.onConfirm, required this.onCancel});
 
   @override
   _SignatureDialogState createState() => _SignatureDialogState();
@@ -76,7 +76,7 @@ class _SignatureDialogState extends State<SignatureDialog> {
                   InkWell(
                     onTap: () async {
                       if (_controller.isNotEmpty) {
-                        Uint8List data = await _controller.toPngBytes();
+                        Uint8List? data = await _controller.toPngBytes();
                         if (data != null) {
                           widget.onConfirm(data);
                         }
@@ -94,9 +94,9 @@ class _SignatureDialogState extends State<SignatureDialog> {
                         AppLocalizations.of(context)
                             .translate("Confirm signature"),
                         style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            ),
+                          color: Colors.black,
+                          fontSize: 14,
+                        ),
                       ),
                     ),
                   ),

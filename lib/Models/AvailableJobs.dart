@@ -8,8 +8,10 @@ class AvailableJobs {
   List<PortContainer> containerJobsIn = [];
   List<PortContainer> containerJobsOut = [];
 
-  AvailableJobs({this.containerJobsIn, this.containerJobsOut});
+  AvailableJobs(
+      {required this.containerJobsIn, required this.containerJobsOut});
 
-  factory AvailableJobs.fromJson(Map<String, dynamic> json) => _$AvailableJobsFromJson(json);
+  factory AvailableJobs.fromJson(Map<String, dynamic> json) =>
+      _$AvailableJobsFromJson(json);
   Map<String, dynamic> toJson() => _$AvailableJobsToJson(this);
 }

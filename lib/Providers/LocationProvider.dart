@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 import 'GeneralProvider.dart';
 
 class LocationProvider extends ChangeNotifier {
-  Timer timer;
+  late Timer timer;
   bool _inPolygon = false;
   var context;
 

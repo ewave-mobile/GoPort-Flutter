@@ -32,9 +32,9 @@ class GoPortApi {
 
   String baseURL = 'https://gpmobileapiPrd.ashdodport.co.il';
 
-  String token;
+  late String token;
 
-  Future<Driver> getDriver(
+  Future<Driver?> getDriver(
       String serialNumber, String tz, String serverToken) async {
     var response = await http.get(Uri.parse(
         '$baseURL/api/auth/getDriver?serialNumber=$serialNumber&tz=$tz&serverToken=$serverToken'));
@@ -62,8 +62,8 @@ class GoPortApi {
     }
   }
 
-  Future<Driver> getDriverByVerifyCode(String serialNumber, String tz,
-      String verifyCode) async {
+  Future<Driver?> getDriverByVerifyCode(
+      String serialNumber, String tz, String verifyCode) async {
     var response = await http.get(Uri.parse(
         "$baseURL/api/auth/getDriverByVerifyCode?tz=$tz&serialNumber=$serialNumber&verifyCode=$verifyCode"));
 
@@ -94,7 +94,7 @@ class GoPortApi {
     }
   }
 
-  Future<VehicleDetails> getVehicleDetails(
+  Future<VehicleDetails?> getVehicleDetails(
       String truckNum, String tz, String trailerNum) async {
     final headers = {
       HttpHeaders.contentTypeHeader: "application/json",
@@ -127,11 +127,11 @@ class GoPortApi {
       final body = response.body == "true" ? true : false;
       return body;
     } else {
-      return null;
+      return false;
     }
   }
 
-  Future<AvailableJobs> getAvailableJobs(
+  Future<AvailableJobs?> getAvailableJobs(
       String driverTZ, String truckNum) async {
     final headers = {
       HttpHeaders.contentTypeHeader: "application/json",
@@ -151,7 +151,7 @@ class GoPortApi {
     }
   }
 
-  Future<List<Technician>> getTechnicians() async {
+  Future<List<Technician?>> getTechnicians() async {
     final headers = {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.authorizationHeader: "Bearer $token"
@@ -208,8 +208,10 @@ class GoPortApi {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
 
-    var response = await http.get(Uri.parse(
-        '$baseURL/api/container/deleteDriverDraftContainers?driverTZ=$driverTZ'), headers: headers);
+    var response = await http.get(
+        Uri.parse(
+            '$baseURL/api/container/deleteDriverDraftContainers?driverTZ=$driverTZ'),
+        headers: headers);
 
     if (response.statusCode == 204) {
       return true;
@@ -218,7 +220,7 @@ class GoPortApi {
     }
   }
 
-  Future<JobCard> getJobCardContainers(String guidID) async {
+  Future<JobCard?> getJobCardContainers(String guidID) async {
     final headers = {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.authorizationHeader: "Bearer $token"
@@ -236,7 +238,7 @@ class GoPortApi {
     }
   }
 
-  Future<String> getJobCardGuidIDByDriver(String driverTZ) async {
+  Future<String?> getJobCardGuidIDByDriver(String driverTZ) async {
     final headers = {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.authorizationHeader: "Bearer $token"
@@ -266,7 +268,7 @@ class GoPortApi {
     if (response.statusCode == 200) {
       return convert.jsonDecode(response.body).cast<String>();
     } else {
-      return null;
+      return [];
     }
   }
 
@@ -284,7 +286,7 @@ class GoPortApi {
     if (response.statusCode == 200) {
       return convert.jsonDecode(response.body);
     } else {
-      return null;
+      return [];
     }
   }
 
@@ -308,7 +310,7 @@ class GoPortApi {
 
       return res;
     } else {
-      return null;
+      return [];
     }
   }
 
@@ -321,14 +323,16 @@ class GoPortApi {
     var response = await http.post(
         Uri.parse('$baseURL/api/chassis/getChassisByLocation?guidID=$guidID'),
         headers: headers,
-        body: convert.jsonEncode(locations.map((item) => item.toJson()).toList()));
+        body: convert
+            .jsonEncode(locations.map((item) => item.toJson()).toList()));
 
     if (response.statusCode == 200) {
       final json = convert.jsonDecode(response.body);
-      final res = json.map((item) => Chassis.fromJson(item)).toList().cast<Chassis>();
+      final res =
+          json.map((item) => Chassis.fromJson(item)).toList().cast<Chassis>();
       return res;
     } else {
-      return null;
+      return [];
     }
   }
 
@@ -347,7 +351,7 @@ class GoPortApi {
       final json = convert.jsonDecode(response.body);
       return json;
     } else {
-      return null;
+      return false;
     }
   }
 
@@ -363,7 +367,8 @@ class GoPortApi {
     );
 
     if (response.statusCode == 200) {
-      final json = response.body != null && response.body == "true" ? true : false;
+      final json =
+          response.body != null && response.body == "true" ? true : false;
       return json;
     } else {
       return false;
@@ -376,18 +381,17 @@ class GoPortApi {
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
     var response = await http.get(
-        Uri.parse(
-            '$baseURL/api/chassis/removeChosenChassis?chassisID=$id'),
+        Uri.parse('$baseURL/api/chassis/removeChosenChassis?chassisID=$id'),
         headers: headers);
 
     if (response.statusCode == 200) {
       return convert.jsonDecode(response.body);
     } else {
-      return null;
+      return false;
     }
   }
 
-  Future<EventResponse> getEvents() async {
+  Future<EventResponse?> getEvents() async {
     final headers = {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.authorizationHeader: "Bearer $token"
@@ -408,14 +412,16 @@ class GoPortApi {
     }
   }
 
-  Future<ShipResponse> getShipsStatus(String driverTZ, String truckNum) async {
+  Future<ShipResponse?> getShipsStatus(String driverTZ, String truckNum) async {
     final headers = {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.authorizationHeader: "Bearer $token"
     };
 
-    var response = await http.get(Uri.parse(
-        '$baseURL/api/ship/getShipsStatus?driverTZ=$driverTZ&truckNum=$truckNum'), headers: headers);
+    var response = await http.get(
+        Uri.parse(
+            '$baseURL/api/ship/getShipsStatus?driverTZ=$driverTZ&truckNum=$truckNum'),
+        headers: headers);
 
     if (response.statusCode == 200) {
       Map<String, dynamic> json = convert.jsonDecode(response.body);
@@ -426,7 +432,7 @@ class GoPortApi {
     }
   }
 
-  Future<WarehouseResponse> getWarehouses(
+  Future<WarehouseResponse?> getWarehouses(
       String driverTZ, String truckNum) async {
     var response = await http.get(Uri.parse(
         '$baseURL/api/cargo/getWarehouses?driverTZ=$driverTZ&truckNum=$truckNum'));
@@ -440,7 +446,7 @@ class GoPortApi {
     }
   }
 
-  Future<WeightCard> getWeightCard(String driverTZ) async {
+  Future<WeightCard?> getWeightCard(String driverTZ) async {
     var response = await http
         .get(Uri.parse('$baseURL/api/cargo/getWeightCard?driverTZ=$driverTZ'));
 
@@ -471,7 +477,7 @@ class GoPortApi {
     }
   }
 
-  Future<String> saveContainersToDraft(
+  Future<String?> saveContainersToDraft(
       SaveContainersToDraft saveContainersToDraft) async {
     final headers = {
       HttpHeaders.contentTypeHeader: "application/json",
@@ -529,7 +535,7 @@ class GoPortApi {
     }
   }
 
-  Future<String> getActualJobWithoutContainers(
+  Future<String?> getActualJobWithoutContainers(
       String driverTZ, String trailerNum, CargoTypeEnum cargoType) async {
     final headers = {
       HttpHeaders.contentTypeHeader: "application/json",
@@ -564,7 +570,7 @@ class GoPortApi {
     }
   }
 
-  Future<String> getDriverGuidID(String driverTZ) async {
+  Future<String?> getDriverGuidID(String driverTZ) async {
     final headers = {
       HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.authorizationHeader: "Bearer $token"
@@ -597,7 +603,7 @@ class GoPortApi {
           .cast<NotTakePhotoReason>();
       return res;
     } else {
-      return null;
+      return [];
     }
   }
 
@@ -615,7 +621,7 @@ class GoPortApi {
       final res = convert.jsonDecode(response.body);
       return res;
     } else {
-      return null;
+      return false;
     }
   }
 }

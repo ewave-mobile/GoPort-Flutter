@@ -20,8 +20,8 @@ import 'package:pushy_flutter/pushy_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unique_identifier/unique_identifier.dart';
 import 'package:upgrader/upgrader.dart';
-import 'package:package_info/package_info.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'dart:convert';
 import '../main.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -40,10 +40,10 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  AppcastConfiguration _upgradeConfig;
-  String _truck;
-  String _version;
-  String _deviceToken;
+  AppcastConfiguration? _upgradeConfig;
+  String? _truck;
+  String? _version;
+  String? _deviceToken;
   bool _loading = false;
   String verifyCode = "";
 
@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-  StreamController<ErrorAnimationType> _errorController;
+  late StreamController<ErrorAnimationType> _errorController;
 
   final TextEditingController _tzController = new TextEditingController(
       text: ""); // TODO: remove in prod //54005442 //34975672
@@ -129,10 +129,10 @@ class _LoginScreenState extends State<LoginScreen> {
         Provider.of<GeneralProvider>(context, listen: false);
     final clientToken = await UniqueIdentifier.serial;
     final res = await GoPortApi.instance.getVerifyCode(
-        generalProvider.serialNumber,
+        generalProvider.serialNumber ?? "",
         _tzController.text,
-        _deviceToken,
-        clientToken);
+        _deviceToken!,
+        clientToken ?? "");
 
     setState(() {
       _loading = false;
@@ -153,10 +153,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (screenMode == ScreenMode.Login || sendCode) {
       final res = await GoPortApi.instance.getVerifyCode(
-          generalProvider.serialNumber,
+          generalProvider.serialNumber ?? "",
           _tzController.text,
-          _deviceToken,
-          clientToken);
+          _deviceToken ?? "",
+          clientToken ?? "");
       // final res = await GoPortApi.instance.checkDriver(
       //     generalProvider.serialNumber,
       //     _tzController.text,
@@ -169,8 +169,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (res == 0) {
         //OK
-        GoPortApi.instance.token =
-            Utils.convertToBase64String(_tzController.text + ":" + clientToken);
+        GoPortApi.instance.token = Utils.convertToBase64String(
+            _tzController.text + ":" + clientToken!);
         setState(() {
           screenMode = ScreenMode.Otp;
         });
@@ -187,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } else {
       final res = await GoPortApi.instance.getDriverByVerifyCode(
-          generalProvider.serialNumber,
+          generalProvider.serialNumber ?? "",
           _tzController.text,
           _otpController.text);
 
@@ -199,12 +199,12 @@ class _LoginScreenState extends State<LoginScreen> {
         Utils.showToast(AppLocalizations.of(context).translate("Wrong code"));
       } else {
         generalProvider.driver = res;
-        if (generalProvider.driver.blockType > 0) {
+        if (generalProvider.driver!.blockType! > 0) {
           Utils.showAlertDialog(
               context: context,
               title: "",
-              message: generalProvider.driver.blockReason);
-        } else if (generalProvider.driver.phoneNumber.isEmpty) {
+              message: generalProvider.driver!.blockReason);
+        } else if (generalProvider.driver!.phoneNumber!.isEmpty) {
           Utils.showAlertDialog(
               context: context,
               title: "",
@@ -220,13 +220,13 @@ class _LoginScreenState extends State<LoginScreen> {
           _otpController.clear();
           _tzController.clear();
 
-          if (generalProvider.driver.populationType == 7) {
+          if (generalProvider.driver!.populationType == 7) {
             //Driver
             await Navigator.of(context).pushNamed('ActionTypeScreen');
             setState(() {
               screenMode = ScreenMode.Login;
             });
-          } else if (generalProvider.driver.populationType == 2) {
+          } else if (generalProvider.driver!.populationType == 2) {
             //Custom Broker
             await Navigator.of(context).pushNamed('CustomBrokerScreen');
             setState(() {
@@ -240,7 +240,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void initData() async {
     final SharedPreferences prefs = await _prefs;
-    String sn = prefs.getString(Const.prefsSerialNumber);
+    String? sn = prefs.getString(Const.prefsSerialNumber);
     if (sn == null) {
       sn = await Utils.initUDID();
       prefs.setString(Const.prefsSerialNumber, sn);
@@ -261,7 +261,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void checkForUpdate() {
-    Upgrader().clearSavedSettings(); // REMOVE this for release builds
+    Upgrader.clearSavedSettings(); // REMOVE this for release builds
 
     // On iOS, the default behavior will be to use the App Store version of
     // the app, so update the Bundle Identifier in example/ios/Runner with a
@@ -281,19 +281,19 @@ class _LoginScreenState extends State<LoginScreen> {
         Provider.of<GeneralProvider>(context, listen: false);
 
     final res = await GoPortApi.instance.getDriver(
-        generalProvider.serialNumber, _tzController.text, serverToken);
+        generalProvider.serialNumber ?? "", _tzController.text, serverToken);
     setState(() {
       _loading = false;
     });
 
     if (res != null) {
       generalProvider.driver = res;
-      if (generalProvider.driver.blockType > 0) {
+      if (generalProvider.driver!.blockType! > 0) {
         Utils.showAlertDialog(
             context: context,
             title: "",
-            message: generalProvider.driver.blockReason);
-      } else if (generalProvider.driver.phoneNumber.isEmpty) {
+            message: generalProvider.driver!.blockReason);
+      } else if (generalProvider.driver!.phoneNumber!.isEmpty) {
         Utils.showAlertDialog(
             context: context,
             title: "",
@@ -305,10 +305,10 @@ class _LoginScreenState extends State<LoginScreen> {
         prefs.setString(Const.prefsLastLoginTz, _tzController.text);
 
         generalProvider.setIsLoggedIn(true);
-        if (generalProvider.driver.populationType == 7) {
+        if (generalProvider.driver!.populationType == 7) {
           //Driver
           Navigator.of(context).pushNamed('ActionTypeScreen');
-        } else if (generalProvider.driver.populationType == 2) {
+        } else if (generalProvider.driver!.populationType == 2) {
           //Custom Broker
           Navigator.of(context).pushNamed('CustomBrokerScreen');
         }
@@ -362,6 +362,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final upgrader = Upgrader(
+      appcastConfig: _upgradeConfig,
+      debugLogging: true,
+    );
     return WillPopScope(
       onWillPop: () async {
         if (_loading) {
@@ -389,8 +393,7 @@ class _LoginScreenState extends State<LoginScreen> {
           resizeToAvoidBottomInset: false,
           key: _scaffoldKey,
           body: UpgradeAlert(
-            appcastConfig: _upgradeConfig,
-            debugLogging: true,
+            upgrader: upgrader,
             child: Stack(
               alignment: Alignment.center,
               fit: StackFit.expand,
@@ -437,7 +440,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   builder: (context, model, _) {
                                     if (model.serverToken != null) {
                                       _onVerificationSucceeded(
-                                          model.serverToken);
+                                          model.serverToken ?? "");
                                       model.serverToken = null;
                                     }
                                     return Text(
@@ -561,10 +564,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(height: 10),
                       Visibility(
                         visible: screenMode == ScreenMode.Otp,
-                        child: FlatButton(
-                          child: new Text(AppLocalizations.of(context)
+                        child: TextButton(
+                          child: Text(AppLocalizations.of(context)
                               .translate("Send again")),
-                          textColor: colorDarkenGray,
+                          style: TextButton.styleFrom(
+                            foregroundColor: colorDarkenGray,
+                          ),
                           onPressed: () {
                             setState(() {
                               login(sendCode: true);

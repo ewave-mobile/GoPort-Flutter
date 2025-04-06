@@ -15,7 +15,10 @@ class ActionBar extends StatelessWidget implements PreferredSizeWidget {
   Function onSupportPressed;
   Function onBackPressed;
 
-  ActionBar({this.scaffoldKey, this.onSupportPressed, this.onBackPressed});
+  ActionBar(
+      {required this.scaffoldKey,
+      required this.onSupportPressed,
+      required this.onBackPressed});
 
   @override
   Size get preferredSize =>
@@ -27,12 +30,12 @@ class ActionBar extends StatelessWidget implements PreferredSizeWidget {
     final driver = generalProvider.driver;
     final showBackButton = generalProvider.showBackButton;
     final truckNum =
-        generalProvider.truck != null ? generalProvider.truck.num : "";
+        generalProvider.truck != null ? generalProvider.truck?.num ?? "" : "";
     // final trailerNum =
     //     generalProvider.truck != null ? generalProvider.trailer.num : "";
     final trailerNum = (generalProvider.trailer != null
-        ? (generalProvider.trailer.num != null
-            ? generalProvider.trailer.num
+        ? (generalProvider.trailer?.num != null
+            ? generalProvider.trailer?.num
             : "")
         : "");
     // var trailerNum = "";
@@ -46,7 +49,7 @@ class ActionBar extends StatelessWidget implements PreferredSizeWidget {
     if (driver != null) {
       fullName = "${driver.firstName} ${driver.lastName}";
     }
-    bool isCustomBroker = driver.populationType == 2;
+    bool isCustomBroker = driver!.populationType == 2;
     final _trackInfoText = isCustomBroker
         ? '${AppLocalizations.of(context).translate("Custom Agent")} ${driver.companyName}'
         : '${AppLocalizations.of(context).translate("Truck")} $truckNum | ${AppLocalizations.of(context).translate("Trailer")} $trailerNum';
@@ -90,7 +93,7 @@ class ActionBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                       onTap: () {
                         //Open menu
-                        scaffoldKey.currentState.openDrawer();
+                        scaffoldKey.currentState!.openDrawer();
                       },
                     ),
                     SizedBox(

@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'Ship.g.dart';
+
 @JsonSerializable()
 class Ship {
   String ship_NO; //shipNo
@@ -11,7 +12,7 @@ class Ship {
   String x_GPS; //lat
   String y_GPS; //lng
   String zakef;
-  bool selected;
+  bool? selected;
 
   Ship(this.ship_NO, this.shipnamE_ENG, this.stat, this.sochen, this.razif,
       this.lasT_UPDATE, this.x_GPS, this.y_GPS, this.zakef, this.selected);

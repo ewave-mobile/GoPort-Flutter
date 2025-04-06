@@ -37,7 +37,7 @@ import 'package:get_it/get_it.dart';
 import 'Screens/ViewHeavyTrafficScreen.dart';
 
 GetIt getIt = GetIt.instance;
-_MyAppState currentState;
+_MyAppState? currentState;
 
 // Please place this code in main.dart,
 // After the import statements, and outside any Widget class (top-level)
@@ -45,7 +45,7 @@ _MyAppState currentState;
 void backgroundNotificationListener(Map<String, dynamic> data) {
   // Print notification payload data
   if (currentState != null) {
-    currentState.onNewNotification(currentState, data);
+    currentState!.onNewNotification(currentState!, data);
   }
   //getIt<GeneralProvider>().setServerToken("1234");
   // print('Received notification: $data');
@@ -73,8 +73,8 @@ void main() {
 
 class MyApp extends StatefulWidget {
   static void setLocale(BuildContext context, Locale newLocale) {
-    _MyAppState state = context.findAncestorStateOfType<_MyAppState>();
-    state.changeLanguage(newLocale);
+    _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
+    state!.changeLanguage(newLocale);
   }
 
   @override
@@ -84,7 +84,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   var initialRouteId = LoginScreen.id;
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  AppLifecycleState _appState;
+  AppLifecycleState? _appState;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
   Locale _locale = Locale(Platform.localeName);
@@ -97,12 +97,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeLocales(List<Locale> locale) {
-    // This is run when system locales are changed
-    super.didChangeLocales(locale);
-    setState(() {
-      _locale = locale.first;
-    });
+  void didChangeLocales(List<Locale>? locales) {
+    super.didChangeLocales(locales);
+    if (locales != null && locales.isNotEmpty) {
+      setState(() {
+        _locale = locales.first;
+      });
+    }
   }
 
   changeLanguage(Locale locale) {
@@ -183,13 +184,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     } else if (messageTypeId ==
         PushyMessageTypeEnum.ActualJobError.index.toString()) {
       Utils.showAlertDialog(
-          context: _navigatorKey.currentContext,
+          context: _navigatorKey.currentContext!,
           title: AppLocalizations.instance.translate("Actual job error"),
           message: message,
           onOk: null);
     } else if (messageTypeId ==
         PushyMessageTypeEnum.ExitThePort.index.toString()) {
-      String message;
+      String? message;
       switch (gate) {
         case "4":
           message = AppLocalizations.instance
@@ -211,15 +212,15 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         generalProvider.setIsLoggedIn(false);
         generalProvider.driver = null;
         Navigator.pushAndRemoveUntil(
-            _navigatorKey.currentContext,
+            _navigatorKey.currentContext!,
             MaterialPageRoute(builder: (context) => LoginScreen()),
             (route) => false);
       };
 
       Utils.showAlertDialog(
-          context: _navigatorKey.currentContext,
+          context: _navigatorKey.currentContext!,
           title: "",
-          message: message,
+          message: message ?? "",
           onOk: onOk);
     }
 
@@ -259,10 +260,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     }
 
     switch (await showDialog<String>(
-        context: _navigatorKey.currentContext,
+        context: _navigatorKey.currentContext!,
         builder: (BuildContext context) {
           return SimpleDialog(
-            title: Text(AppLocalizations.of(_navigatorKey.currentContext)
+            title: Text(AppLocalizations.of(_navigatorKey.currentContext!)
                 .translate("Choose language")),
             children: languages.map((element) {
               return SimpleDialogOption(
@@ -275,19 +276,19 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           );
         })) {
       case "English":
-        MyApp.setLocale(_navigatorKey.currentContext,
+        MyApp.setLocale(_navigatorKey.currentContext!,
             Locale.fromSubtags(languageCode: "en"));
         break;
       case "עברית":
-        MyApp.setLocale(_navigatorKey.currentContext,
+        MyApp.setLocale(_navigatorKey.currentContext!,
             Locale.fromSubtags(languageCode: "he"));
         break;
       case "Русский":
-        MyApp.setLocale(_navigatorKey.currentContext,
+        MyApp.setLocale(_navigatorKey.currentContext!,
             Locale.fromSubtags(languageCode: "ru"));
         break;
       case "عربي":
-        MyApp.setLocale(_navigatorKey.currentContext,
+        MyApp.setLocale(_navigatorKey.currentContext!,
             Locale.fromSubtags(languageCode: "ar"));
         break;
     }
@@ -295,17 +296,17 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   _onShowTrackDialog() {
     showDialog(
-        context: _navigatorKey.currentContext,
+        context: _navigatorKey.currentContext!,
         builder: (BuildContext context) {
           return InputTrackDialog(
             onConfirm: (String truckNum, String trailerNum) async {
-              Navigator.pop(_navigatorKey.currentContext, true);
+              Navigator.pop(_navigatorKey.currentContext!, true);
 
               await _getVehicleDetails(truckNum, trailerNum);
               // _initializeData();
             },
             onCancel: () {
-              Navigator.pop(_navigatorKey.currentContext, true);
+              Navigator.pop(_navigatorKey.currentContext!, true);
             },
           );
         });
@@ -324,7 +325,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             AppLocalizations.of(context).translate("Confirm sending support?"),
         onOk: () async {
           bool res = await GoPortApi.instance
-              .setGateStatus(driver.tz, GateAppStatusEnum.SendToSupport);
+              .setGateStatus(driver!.tz ?? "", GateAppStatusEnum.SendToSupport);
           Utils.showAlertDialog(
               context: context,
               message: AppLocalizations.of(context).translate(
@@ -345,7 +346,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   _getVehicleDetails(String truck, String trailer) async {
     final context = _navigatorKey.currentContext;
     final generalProvider =
-        Provider.of<GeneralProvider>(context, listen: false);
+        Provider.of<GeneralProvider>(context!, listen: false);
     final driver = generalProvider.driver;
 
     // setState(() {
@@ -353,8 +354,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     //   _loading = true;
     // });
     //
-    final res =
-        await GoPortApi.instance.getVehicleDetails(truck, driver.tz, trailer);
+    final res = await GoPortApi.instance
+        .getVehicleDetails(truck, driver!.tz ?? "", trailer);
 
     // setState(() {
     //   _loading = false;
@@ -368,7 +369,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         generalProvider.setTruck(res.truck);
         generalProvider.setTrailer(res.trailer);
 
-        if (driver.companyNumber != generalProvider.truck.companyNumber) {
+        if (driver.companyNumber != generalProvider.truck!.companyNumber) {
           generalProvider.setTruck(null);
           generalProvider.setTrailer(null);
           Utils.showAlertDialog(
@@ -405,9 +406,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             ? ActionBar(
                 scaffoldKey: _scaffoldKey,
                 onBackPressed: () =>
-                    _navigatorKey.currentState.pop(buildContext),
+                    _navigatorKey.currentState!.pop(buildContext),
                 onSupportPressed: () =>
-                    this._onSupportPressed(_navigatorKey.currentContext))
+                    this._onSupportPressed(_navigatorKey.currentContext!))
             : null,
         drawer: MenuScreen(
             scaffoldKey: _scaffoldKey,
@@ -433,7 +434,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       ],
       locale: _locale,
       localeResolutionCallback:
-          (Locale locale, Iterable<Locale> supportedLocales) {
+          (Locale? locale, Iterable<Locale> supportedLocales) {
+        if (locale == null) return supportedLocales.first;
         for (Locale supportedLocale in supportedLocales) {
           if (supportedLocale.languageCode == locale.languageCode ||
               supportedLocale.countryCode == locale.countryCode) {

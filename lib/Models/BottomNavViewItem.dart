@@ -3,5 +3,6 @@ class BottomNavViewItem {
   String image;
   Function action;
 
-  BottomNavViewItem({this.title, this.image, this.action});
+  BottomNavViewItem(
+      {required this.title, required this.image, required this.action});
 }

@@ -6,14 +6,12 @@ part of 'JobCardContainer.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-JobCardContainer _$JobCardContainerFromJson(Map<String, dynamic> json) {
-  return JobCardContainer(
-    container: json['container'] == null
-        ? null
-        : PortContainer.fromJson(json['container'] as Map<String, dynamic>),
-    guidID: json['guidID'] as String,
-  );
-}
+JobCardContainer _$JobCardContainerFromJson(Map<String, dynamic> json) =>
+    JobCardContainer(
+      container:
+          PortContainer.fromJson(json['container'] as Map<String, dynamic>),
+      guidID: json['guidID'] as String,
+    );
 
 Map<String, dynamic> _$JobCardContainerToJson(JobCardContainer instance) =>
     <String, dynamic>{

@@ -16,7 +16,7 @@ import 'package:goport/Models/Chassis.dart';
 import 'package:goport/Models/ImporterChassis.dart';
 import 'package:goport/Network/GoPortApi.dart';
 import 'package:goport/Providers/GeneralProvider.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,12 +34,12 @@ class _CheckOutInputChassisScreenState extends State<CheckOutInputChassisScreen>
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool _loading = false;
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  TabController _tabController;
+  TabController? _tabController;
   List<BottomNavViewItem> navViewItems = [];
   List<String> _importers = [];
   List<Chassis> _chassis = [];
-  String _currentImporter;
-  String _quantityText;
+  String? _currentImporter;
+  String? _quantityText;
 
   @override
   void initState() {
@@ -57,7 +57,7 @@ class _CheckOutInputChassisScreenState extends State<CheckOutInputChassisScreen>
   }
 
   _loadData() {
-    Map args = ModalRoute.of(context).settings.arguments as Map;
+    Map args = ModalRoute.of(context)!.settings.arguments as Map;
     List<Chassis> chosenChassis = args["chosenChassis"];
 
     setState(() {
@@ -72,20 +72,19 @@ class _CheckOutInputChassisScreenState extends State<CheckOutInputChassisScreen>
   }
 
   _onNext() {
-    Map args = ModalRoute.of(context).settings.arguments as Map;
+    Map args = ModalRoute.of(context)!.settings.arguments as Map;
     List<Chassis> availableChassis = args["availableChassis"];
     String guidID = args["guidID"];
 
-    Navigator.of(context).pushNamed('CheckOutSummaryScreen',
-        arguments: {
-          "guidID": guidID,
-          "chosenChassis": _chassis,
-          "availableChassis": availableChassis
-        });
+    Navigator.of(context).pushNamed('CheckOutSummaryScreen', arguments: {
+      "guidID": guidID,
+      "chosenChassis": _chassis,
+      "availableChassis": availableChassis
+    });
   }
 
   _onFloatActionPressed() {
-    Map args = ModalRoute.of(context).settings.arguments as Map;
+    Map args = ModalRoute.of(context)!.settings.arguments as Map;
     List<Chassis> availableChassis = args["availableChassis"];
     List<Chassis> chosenChassis = args["chosenChassis"];
     String guidID = args["guidID"];
@@ -104,7 +103,8 @@ class _CheckOutInputChassisScreenState extends State<CheckOutInputChassisScreen>
                 _loading = true;
               });
 
-              bool res = await GoPortApi.instance.setChassisLoaded(currentChassis);
+              bool res =
+                  await GoPortApi.instance.setChassisLoaded(currentChassis);
 
               setState(() {
                 _loading = false;
@@ -116,14 +116,16 @@ class _CheckOutInputChassisScreenState extends State<CheckOutInputChassisScreen>
                 _setQtyText();
               } else {
                 setState(() {
-                  int index = _chassis.indexWhere((element) => element.chassisID == currentChassis.chassisID);
+                  int index = _chassis.indexWhere((element) =>
+                      element.chassisID == currentChassis.chassisID);
                   if (index != -1) {
                     _chassis.removeAt(index);
                   }
                 });
 
                 _setQtyText();
-                Utils.showToast(AppLocalizations.of(context).translate("Shilda not available"));
+                Utils.showToast(AppLocalizations.of(context)
+                    .translate("Shilda not available"));
               }
             },
             onCancel: () {
@@ -134,7 +136,7 @@ class _CheckOutInputChassisScreenState extends State<CheckOutInputChassisScreen>
   }
 
   _setQtyText() {
-    Map args = ModalRoute.of(context).settings.arguments as Map;
+    Map args = ModalRoute.of(context)!.settings.arguments as Map;
     List<Chassis> availableChassis = args["availableChassis"];
     String qty = "${_chassis.length} / ${availableChassis.length}";
     setState(() {
@@ -145,7 +147,7 @@ class _CheckOutInputChassisScreenState extends State<CheckOutInputChassisScreen>
   Widget _buildListItem(BuildContext context, int index) {
     final item = _chassis[index];
     return Dismissible(
-      key: Key(item.chassisID),
+      key: Key(item.chassisID ?? ""),
       confirmDismiss: (DismissDirection direction) async {
         return await Utils.showConfirmDialog(
             context: context,
@@ -167,13 +169,22 @@ class _CheckOutInputChassisScreenState extends State<CheckOutInputChassisScreen>
               children: [
                 Row(
                   children: [
-                    Container(width: 10, height: 10, decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: colorLogo2),),
+                    Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: colorLogo2),
+                    ),
                     SizedBox(
                       width: 4,
                     ),
                     Text(
-                      item.chassisID,
-                      style: TextStyle(color: colorLogo2, fontSize: 18, fontWeight: FontWeight.bold),
+                      item.chassisID ?? "",
+                      style: TextStyle(
+                          color: colorLogo2,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
@@ -186,14 +197,16 @@ class _CheckOutInputChassisScreenState extends State<CheckOutInputChassisScreen>
                     Row(
                       children: [
                         Text(
-                          AppLocalizations.of(context).translate("Manufacturer") + ":",
+                          AppLocalizations.of(context)
+                                  .translate("Manufacturer") +
+                              ":",
                           style: TextStyle(color: colorLightGray, fontSize: 14),
                         ),
                         SizedBox(
                           width: 6,
                         ),
                         Text(
-                          item.manufacturer,
+                          item.manufacturer ?? "",
                           style: TextStyle(color: Colors.black, fontSize: 14),
                         )
                       ],
@@ -208,7 +221,7 @@ class _CheckOutInputChassisScreenState extends State<CheckOutInputChassisScreen>
                           width: 6,
                         ),
                         Text(
-                          item.model,
+                          item.model ?? "",
                           style: TextStyle(color: Colors.black, fontSize: 14),
                         ),
                       ],
@@ -233,89 +246,96 @@ class _CheckOutInputChassisScreenState extends State<CheckOutInputChassisScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        key: _scaffoldKey,
-        floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-        floatingActionButton: Container(
-          margin: EdgeInsets.only(top: 50),
-          child: FloatingActionButton(
-            onPressed: () {
-              _onFloatActionPressed();
-            },
-            child: Container(
-              child: Image.asset(
-                "assets/images/ic_playlist_add.png",
-                width: 20,
-                height: 20,
-              ),
+      resizeToAvoidBottomInset: false,
+      key: _scaffoldKey,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      floatingActionButton: Container(
+        margin: EdgeInsets.only(top: 50),
+        child: FloatingActionButton(
+          onPressed: () {
+            _onFloatActionPressed();
+          },
+          child: Container(
+            child: Image.asset(
+              "assets/images/ic_playlist_add.png",
+              width: 20,
+              height: 20,
             ),
-            elevation: 6,
-            backgroundColor: colorLogo2,
           ),
+          elevation: 6,
+          backgroundColor: colorLogo2,
         ),
-        body: SafeArea(
-          child: ModalProgressHUD(
-            inAsyncCall: _loading,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Container(height: 1, color: colorDivider),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          AppLocalizations.of(context).translate('Enter shilda number'),
-                          style: TextStyle(color: colorGray, fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
+      ),
+      body: SafeArea(
+        child: ModalProgressHUD(
+          inAsyncCall: _loading,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Container(height: 1, color: colorDivider),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        AppLocalizations.of(context)
+                            .translate('Enter shilda number'),
+                        style: TextStyle(
+                            color: colorGray,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
-                    SizedBox(
-                      height: 50,
-                    ),
-                    Expanded(
-                      child: ListView.builder(
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Expanded(
+                    child: ListView.builder(
                         padding: EdgeInsets.only(bottom: 70),
-                          itemCount: _chassis.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return _buildListItem(context, index);
-                          }),
-                    ),
-                  ],
-                ),
-                Positioned(
-                    bottom: 0,
-                    child: Column(
-                      children: [
-                        Container(
-                          child: Text(
-                            _quantityText,
-                            style: TextStyle(color: colorGray, fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          padding: EdgeInsets.all(6),
-                          color: colorDivider,
-                          width: MediaQuery.of(context).size.width,
+                        itemCount: _chassis.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return _buildListItem(context, index);
+                        }),
+                  ),
+                ],
+              ),
+              Positioned(
+                  bottom: 0,
+                  child: Column(
+                    children: [
+                      Container(
+                        child: Text(
+                          _quantityText ?? "",
+                          style: TextStyle(
+                              color: colorGray,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
                         ),
-                        BottomNavView(
-                          items: navViewItems,
-                        ),
-                      ],
-                    )),
-              ],
-            ),
+                        padding: EdgeInsets.all(6),
+                        color: colorDivider,
+                        width: MediaQuery.of(context).size.width,
+                      ),
+                      BottomNavView(
+                        items: navViewItems,
+                      ),
+                    ],
+                  )),
+            ],
           ),
         ),
-      );
+      ),
+    );
   }
 
-  _onChassisRemoved(Chassis currentChassis) async{
+  _onChassisRemoved(Chassis currentChassis) async {
     setState(() {
       _loading = true;
     });
@@ -331,7 +351,8 @@ class _CheckOutInputChassisScreenState extends State<CheckOutInputChassisScreen>
         _setQtyText();
       });
     } else {
-      Utils.showToast(AppLocalizations.of(context).translate("Shilda not available"));
+      Utils.showToast(
+          AppLocalizations.of(context).translate("Shilda not available"));
     }
   }
 }

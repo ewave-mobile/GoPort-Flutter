@@ -6,17 +6,16 @@ part of 'ImporterChassis.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ImporterChassis _$ImporterChassisFromJson(Map<String, dynamic> json) {
-  return ImporterChassis(
-    importer: json['importer'] as String,
-    manufacturer: json['manufacturer'] as String,
-    model: json['model'] as String,
-    location: json['location'] as String,
-    destination: json['destination'] as String,
-    qty: json['qty'] as int,
-    selected: json['selected'] as bool,
-  );
-}
+ImporterChassis _$ImporterChassisFromJson(Map<String, dynamic> json) =>
+    ImporterChassis(
+      importer: json['importer'] as String?,
+      manufacturer: json['manufacturer'] as String?,
+      model: json['model'] as String?,
+      location: json['location'] as String?,
+      destination: json['destination'] as String?,
+      qty: (json['qty'] as num?)?.toInt(),
+      selected: json['selected'] as bool? ?? false,
+    );
 
 Map<String, dynamic> _$ImporterChassisToJson(ImporterChassis instance) =>
     <String, dynamic>{

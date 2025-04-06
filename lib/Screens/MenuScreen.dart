@@ -18,7 +18,7 @@ import 'package:goport/Models/PortContainer.dart';
 import 'package:goport/Network/GoPortApi.dart';
 import 'package:goport/Providers/GeneralProvider.dart';
 import 'package:goport/main.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,7 +32,11 @@ class MenuScreen extends StatefulWidget {
   final Function onShowTruckDetails;
   final Function onShowLanguage;
 
-  MenuScreen({this.navigatorKey, this.scaffoldKey, this.onShowTruckDetails, this.onShowLanguage});
+  MenuScreen(
+      {required this.navigatorKey,
+      required this.scaffoldKey,
+      required this.onShowTruckDetails,
+      required this.onShowLanguage});
 
   @override
   _MenuScreenState createState() => _MenuScreenState();
@@ -54,12 +58,12 @@ class _MenuScreenState extends State<MenuScreen> {
 
   _onLogout() {
     final generalProvider = Provider.of<GeneralProvider>(
-        _scaffoldKey.currentContext,
+        _scaffoldKey!.currentContext!,
         listen: false);
     final driver = generalProvider.driver;
 
     final state = RootDrawer.of(context);
-    state.close();
+    state!.close();
 
     Utils.showConfirmDialog(
         context: widget.navigatorKey.currentContext,
@@ -70,13 +74,13 @@ class _MenuScreenState extends State<MenuScreen> {
             "Note, Disconnect From App Will Transfer You To Kiosk Mode, Continue?"),
         onOk: () async {
           bool res = await GoPortApi.instance
-              .setGateStatus(driver.tz, GateAppStatusEnum.Disconnected);
+              .setGateStatus(driver!.tz ?? "", GateAppStatusEnum.Disconnected);
           final SharedPreferences prefs = await _prefs;
           prefs.setString(Const.prefsLogOn, "0");
           generalProvider.setIsLoggedIn(false);
           generalProvider.driver = null;
           Navigator.pushAndRemoveUntil(
-              widget.navigatorKey.currentContext,
+              widget.navigatorKey.currentContext!,
               MaterialPageRoute(builder: (context) => LoginScreen()),
               (route) => false);
         });
@@ -85,22 +89,22 @@ class _MenuScreenState extends State<MenuScreen> {
   _onChangeLanguage() {
     if (widget.onShowLanguage != null) {
       final state = RootDrawer.of(context);
-      state.close();
+      state!.close();
       widget.onShowLanguage();
     }
   }
 
   _onShowTraffic() {
     final state = RootDrawer.of(context);
-    state.close();
-    Navigator.of(widget.navigatorKey.currentContext)
+    state!.close();
+    Navigator.of(widget.navigatorKey.currentContext!)
         .pushNamed("ViewHeavyTrafficScreen");
   }
 
   _onChangeTruckDetails() {
     if (widget.onShowTruckDetails != null) {
       final state = RootDrawer.of(context);
-      state.close();
+      state!.close();
       widget.onShowTruckDetails();
     }
   }
@@ -111,7 +115,7 @@ class _MenuScreenState extends State<MenuScreen> {
         Provider.of<GeneralProvider>(context, listen: false);
     final driver = generalProvider.driver;
 
-    final userName = driver.firstName + " " + driver.lastName;
+    final userName = driver!.firstName! + " " + driver.lastName!;
     final serialNumber = generalProvider.serialNumber;
 
     return Drawer(
@@ -143,7 +147,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       height: 6,
                     ),
                     Text(
-                      serialNumber,
+                      serialNumber ?? "",
                       style: TextStyle(fontSize: 16, color: colorLightGray),
                     )
                   ],

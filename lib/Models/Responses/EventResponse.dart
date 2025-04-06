@@ -8,6 +8,7 @@ class EventResponse {
   List<Event> iruimList;
   EventResponse(this.iruimList);
 
-  factory EventResponse.fromJson(Map<String, dynamic> json) => _$EventResponseFromJson(json);
+  factory EventResponse.fromJson(Map<String, dynamic> json) =>
+      _$EventResponseFromJson(json);
   Map<String, dynamic> toJson() => _$EventResponseToJson(this);
 }

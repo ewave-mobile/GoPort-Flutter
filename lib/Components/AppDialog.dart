@@ -2,15 +2,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class AppDialog extends StatelessWidget {
-  String title;
-  String message;
+  String? title;
+  String? message;
   String okButton;
-  String cancelButton;
-  VoidCallback onOK;
-  VoidCallback onCancel;
+  String? cancelButton;
+  VoidCallback? onOK;
+  VoidCallback? onCancel;
 
   AppDialog(
-      {this.title,
+      { this.title,
       this.message,
       this.okButton = "OK",
       this.onOK,
@@ -30,11 +30,11 @@ class AppDialog extends StatelessWidget {
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           titlePadding: EdgeInsets.all(0),
           title: new Text(
-            title,
+            title ?? "",
             style: textStyle,
           ),
           content: new Text(
-            message,
+            message ?? "",
             style: textStyle,
           ),
           actions: <Widget>[
@@ -43,17 +43,17 @@ class AppDialog extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context);
                 if (onOK != null) {
-                  onOK();
+                  onOK!();
                 }
               },
             ),
             this.cancelButton != null
                 ? new TextButton(
-                    child: Text(this.cancelButton),
+                    child: Text(this.cancelButton ?? ""),
                     onPressed: () {
                       Navigator.of(context).pop();
                       if (onCancel != null) {
-                        onCancel();
+                        onCancel!();
                       }
                     },
                   )

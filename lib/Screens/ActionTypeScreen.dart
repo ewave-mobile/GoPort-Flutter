@@ -19,7 +19,7 @@ import 'package:goport/Models/Truck.dart';
 import 'package:goport/Network/GoPortApi.dart';
 import 'package:goport/Providers/GeneralProvider.dart';
 import 'package:goport/Providers/LocationProvider.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,8 +43,8 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
   List<Event> _events = [];
   final _cardHeight = 140.0;
   bool _enterTrackVisible = true;
-  AnimationController animation;
-  Animation<double> _fadeInFadeOut;
+  late AnimationController animation;
+  late Animation<double> _fadeInFadeOut;
 
   @override
   void initState() {
@@ -98,8 +98,8 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
   _checkExistsDraft() async {
     final generalProvider =
         Provider.of<GeneralProvider>(context, listen: false);
-    bool res =
-        await GoPortApi.instance.checkExistsDraft(generalProvider.driver.tz);
+    bool res = await GoPortApi.instance
+        .checkExistsDraft(generalProvider.driver!.tz ?? "");
     if (res) {
       setState(() {
         _hasJobDraft = true;
@@ -111,7 +111,8 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
     final generalProvider =
         Provider.of<GeneralProvider>(context, listen: false);
     String guidID = await GoPortApi.instance
-        .getJobCardGuidIDByDriver(generalProvider.driver.tz);
+            .getJobCardGuidIDByDriver(generalProvider.driver?.tz ?? "") ??
+        "";
     if (guidID != null && guidID != "null") {
       guidID = guidID.replaceAll("\"", "");
       generalProvider.setShowBackButton(true);
@@ -129,14 +130,16 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
         Provider.of<GeneralProvider>(context, listen: false);
     final driver = generalProvider.driver;
     final SharedPreferences prefs = await _prefs;
-    Truck truck;
-    Truck trailer;
+    Truck? truck;
+    Truck? trailer;
     if (prefs.getString(Const.prefsTruck) != null) {
-      truck = Truck.fromJson(jsonDecode(prefs.getString(Const.prefsTruck)));
+      truck =
+          Truck.fromJson(jsonDecode(prefs.getString(Const.prefsTruck) ?? ""));
     }
     if (prefs.getString(Const.prefsTrailer) != null &&
         prefs.getString(Const.prefsTrailer) != "null") {
-      trailer = Truck.fromJson(jsonDecode(prefs.getString(Const.prefsTrailer)));
+      trailer =
+          Truck.fromJson(jsonDecode(prefs.getString(Const.prefsTrailer) ?? ""));
     }
 
     String fullName = "";
@@ -156,7 +159,7 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
       _getVehicleDetails(truck.num, "");
     }
 
-    EventResponse res = await GoPortApi.instance.getEvents();
+    EventResponse? res = await GoPortApi.instance.getEvents();
     if (res != null) {
       setState(() {
         _events = res.iruimList;
@@ -174,8 +177,8 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
       _loading = true;
     });
 
-    final res =
-        await GoPortApi.instance.getVehicleDetails(truck, driver.tz, trailer);
+    final res = await GoPortApi.instance
+        .getVehicleDetails(truck, driver!.tz ?? "", trailer);
 
     setState(() {
       _loading = false;
@@ -188,7 +191,7 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
       } else {
         generalProvider.setTruck(res.truck);
         generalProvider.setTrailer(res.trailer);
-        if (driver.companyNumber != generalProvider.truck.companyNumber) {
+        if (driver.companyNumber != generalProvider.truck?.companyNumber) {
           generalProvider.setTruck(null);
           generalProvider.setTrailer(null);
           Utils.showAlertDialog(
@@ -274,7 +277,7 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
     final generalProvider =
         Provider.of<GeneralProvider>(context, listen: false);
     final driver = generalProvider.driver;
-    final res = await GoPortApi.instance.getDriverGuidID(driver.tz);
+    final res = await GoPortApi.instance.getDriverGuidID(driver!.tz ?? "");
 
     setState(() {
       _loading = false;
@@ -702,7 +705,7 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
                               ],
                             ),
                             visible: generalProvider.truck != null &&
-                                generalProvider.truck.isByPass)
+                                generalProvider.truck!.isByPass)
                       ],
                     )
                   ],

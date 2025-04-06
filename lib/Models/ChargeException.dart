@@ -5,24 +5,24 @@ part 'ChargeException.g.dart';
 
 @JsonSerializable()
 class ChargeException {
-  int id;
-  String driverTZ;
-  String driverName;
-  String companyName;
-  String containerNum;
-  String truckNum;
-  String trailerNum;
-  bool sealNotMatch;
-  String sealNotMatchDeclared;
-  String sealNotMatchActually;
-  bool weightMismatched;
-  String weightMismatchedDeclared;
-  String weightMismatchedActually;
-  bool goodsMismatched;
-  String goodsMismatchedRemark;
-  String signatureFileName;
-  String signature;
-  DateTime createDate;
+  int? id;
+  String? driverTZ;
+  String? driverName;
+  String? companyName;
+  String? containerNum;
+  String? truckNum;
+  String? trailerNum;
+  bool? sealNotMatch;
+  String? sealNotMatchDeclared;
+  String? sealNotMatchActually;
+  bool? weightMismatched;
+  String? weightMismatchedDeclared;
+  String? weightMismatchedActually;
+  bool? goodsMismatched;
+  String? goodsMismatchedRemark;
+  String? signatureFileName;
+  String? signature;
+  DateTime? createDate;
 
   ChargeException(
       {this.id,

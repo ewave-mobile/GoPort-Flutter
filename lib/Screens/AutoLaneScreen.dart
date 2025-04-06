@@ -14,7 +14,7 @@ import 'package:goport/Models/PortContainer.dart';
 import 'package:goport/Network/GoPortApi.dart';
 import 'package:goport/Providers/GeneralProvider.dart';
 import 'package:intl/intl.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,11 +29,11 @@ class AutoLaneScreen extends StatefulWidget {
 class _AutoLaneScreenState extends State<AutoLaneScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   List<BottomNavViewItem> navViewItems = [];
-  TextEditingController _serialNumController;
+  late TextEditingController _serialNumController;
   List<PortContainer> _inContainers = [];
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  NotTakePhotoReason _notTakePhotoReason;
-  String _currentImagePath;
+  NotTakePhotoReason? _notTakePhotoReason;
+  String? _currentImagePath;
   bool _loading = false;
 
   @override
@@ -66,7 +66,7 @@ class _AutoLaneScreenState extends State<AutoLaneScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    item.actualCntrNo,
+                    item.actualCntrNo ?? "",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
@@ -114,7 +114,7 @@ class _AutoLaneScreenState extends State<AutoLaneScreen> {
                             _onTakePicture(item);
                           },
                           child: Image.file(
-                            File(item.imagePath),
+                            File(item.imagePath ?? ""),
                             width: 30,
                             height: 30,
                             fit: BoxFit.cover,
@@ -135,8 +135,7 @@ class _AutoLaneScreenState extends State<AutoLaneScreen> {
                         ),
                         onLongPress: () {
                           setState(() {
-                            _currentImagePath =
-                                item.imagePath;
+                            _currentImagePath = item.imagePath;
                           });
                         },
                       ))
@@ -159,12 +158,14 @@ class _AutoLaneScreenState extends State<AutoLaneScreen> {
 
   _onTakePicture(PortContainer portContainer) async {
     final ImagePicker _picker = ImagePicker();
-    final XFile photo = await _picker.pickImage(source: ImageSource.camera, imageQuality: 10);
-    portContainer.imagePath = photo.path;
+    final XFile? photo =
+        await _picker.pickImage(source: ImageSource.camera, imageQuality: 10);
+    portContainer.imagePath = photo?.path ?? "";
 
     DateFormat dateFormat = DateFormat("yyyyMMddHHmmss");
     String createDate = dateFormat.format(DateTime.now());
-    portContainer.imageName = portContainer.actualCntrNo + "_" + createDate + ".jpg";
+    portContainer.imageName =
+        portContainer.actualCntrNo! + "_" + createDate + ".jpg";
 
     setState(() {});
   }
@@ -203,7 +204,7 @@ class _AutoLaneScreenState extends State<AutoLaneScreen> {
     }
   }
 
-  _onAutoLaneNextClicked(bool skip, NotTakePhotoReason reason) {
+  _onAutoLaneNextClicked(bool skip, NotTakePhotoReason? reason) {
     if (!skip) {
       _notTakePhotoReason = reason;
     }
@@ -213,21 +214,21 @@ class _AutoLaneScreenState extends State<AutoLaneScreen> {
   _showDraftJobCard() {
     Navigator.of(context).pushNamed("DraftJobCardScreen",
         arguments: _notTakePhotoReason != null
-            ? {"notTakePhotoReasonId": _notTakePhotoReason.id}
+            ? {"notTakePhotoReasonId": _notTakePhotoReason?.id ?? ""}
             : {});
   }
 
   _checkValidAutoLane() {
     bool res = true;
     for (PortContainer c in _inContainers) {
-      if (_checkContainerTypeNotMustSealNo(c.containerType)) {
+      if (_checkContainerTypeNotMustSealNo(c.containerType ?? "")) {
         return true;
       }
 
       if (c.plombaNumber == null ||
-          c.plombaNumber.isEmpty ||
+          c.plombaNumber!.isEmpty ||
           c.imagePath == null ||
-          c.imagePath.isEmpty) {
+          c.imagePath!.isEmpty) {
         res = false;
       }
     }
@@ -320,7 +321,7 @@ class _AutoLaneScreenState extends State<AutoLaneScreen> {
                   )),
               _currentImagePath != null
                   ? ImageDialog(
-                      imagePath: _currentImagePath,
+                      imagePath: _currentImagePath ?? "",
                       onClose: () {
                         setState(() {
                           _currentImagePath = null;
