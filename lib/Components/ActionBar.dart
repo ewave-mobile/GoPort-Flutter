@@ -15,27 +15,44 @@ class ActionBar extends StatelessWidget implements PreferredSizeWidget {
   Function onSupportPressed;
   Function onBackPressed;
 
-  ActionBar({this.scaffoldKey, this.onSupportPressed, this.onBackPressed});
+  ActionBar(
+      {required this.scaffoldKey,
+      required this.onSupportPressed,
+      required this.onBackPressed});
 
   @override
-  Size get preferredSize => new Size.fromHeight(AppBar().preferredSize.height * 1.9);
+  Size get preferredSize =>
+      new Size.fromHeight(AppBar().preferredSize.height * 1.9);
 
   @override
   Widget build(BuildContext context) {
-    final generalProvider =
-    Provider.of<GeneralProvider>(context, listen: true);
+    final generalProvider = Provider.of<GeneralProvider>(context, listen: true);
     final driver = generalProvider.driver;
     final showBackButton = generalProvider.showBackButton;
-    final truckNum = generalProvider.truck != null ? generalProvider.truck.num : "";
-    final trailerNum = generalProvider.truck != null ? generalProvider.trailer.num : "";
+    final truckNum =
+        generalProvider.truck != null ? generalProvider.truck?.num ?? "" : "";
+    // final trailerNum =
+    //     generalProvider.truck != null ? generalProvider.trailer.num : "";
+    final trailerNum = (generalProvider.trailer != null
+        ? (generalProvider.trailer?.num != null
+            ? generalProvider.trailer?.num
+            : "")
+        : "");
+    // var trailerNum = "";
+    // try {
+    //   trailerNum =
+    //       generalProvider.truck != null ? generalProvider.trailer.num : "";
+    // } catch (ex) {}
+
     String fullName = "";
 
     if (driver != null) {
       fullName = "${driver.firstName} ${driver.lastName}";
     }
-    bool isCustomBroker = driver.populationType == 2;
-    final _trackInfoText =
-    isCustomBroker ? '${AppLocalizations.of(context).translate("Custom Agent")} ${driver.companyName}' : '${AppLocalizations.of(context).translate("Truck")} $truckNum | ${AppLocalizations.of(context).translate("Trailer")} $trailerNum';
+    bool isCustomBroker = driver!.populationType == 2;
+    final _trackInfoText = isCustomBroker
+        ? '${AppLocalizations.of(context).translate("Custom Agent")} ${driver.companyName}'
+        : '${AppLocalizations.of(context).translate("Truck")} $truckNum | ${AppLocalizations.of(context).translate("Trailer")} $trailerNum';
     final _fullName = fullName;
     final title = AppLocalizations.of(context).translate("Choose Action");
     Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
@@ -66,46 +83,72 @@ class ActionBar extends StatelessWidget implements PreferredSizeWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                  Row(
-                    children: [
-                      InkWell(
-                        child: Image.asset("assets/images/ic_menu.png", width: 30, height: 30,),
-                        onTap: () {
-                          //Open menu
-                          scaffoldKey.currentState.openDrawer();
-                        },
-                      ),
-                      SizedBox(width: 10,),
-                      showBackButton ? InkWell(
-                        onTap: _onBack,
-                        child: Image.asset("assets/images/ic_chevron_left.png", width: 30, height: 30, matchTextDirection: true,),
-                      ) : Container(),
-                      SizedBox(width: 10,),
-                      Text(title, style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                      ),),
-                    ],
-                  ),
                 Row(
                   children: [
-                    Text(env, style: TextStyle(
-                      color: colorError,
-                      fontSize: 16,
-                    ),),
-                    SizedBox(width: 6,),
-                    // Image.asset("assets/images/ic_scale_measurement.png", width: 30, height: 30,),
-                    SizedBox(width: 6,),
                     InkWell(
-                      child: Image.asset("assets/images/ic_call_24.png", width: 24, height: 24,),
+                      child: Image.asset(
+                        "assets/images/ic_menu.png",
+                        width: 30,
+                        height: 30,
+                      ),
+                      onTap: () {
+                        //Open menu
+                        scaffoldKey.currentState!.openDrawer();
+                      },
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    showBackButton
+                        ? InkWell(
+                            onTap: _onBack,
+                            child: Image.asset(
+                              "assets/images/ic_chevron_left.png",
+                              width: 30,
+                              height: 30,
+                              matchTextDirection: true,
+                            ),
+                          )
+                        : Container(),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      title,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      env,
+                      style: TextStyle(
+                        color: colorError,
+                        fontSize: 16,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    // Image.asset("assets/images/ic_scale_measurement.png", width: 30, height: 30,),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    InkWell(
+                      child: Image.asset(
+                        "assets/images/ic_call_24.png",
+                        width: 24,
+                        height: 24,
+                      ),
                       onTap: () {
                         //support
                         _onSupport();
                       },
                     ),
-
-
                   ],
                 )
               ],
@@ -125,16 +168,14 @@ class ActionBar extends StatelessWidget implements PreferredSizeWidget {
                   Text(
                     _fullName,
                     style: TextStyle(
-                        color: colorGray,
-                        fontWeight: FontWeight.bold),
+                        color: colorGray, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
                     height: 6,
                   ),
                   Text(
                     _trackInfoText,
-                    style: TextStyle(
-                        color: colorDarkenGray),
+                    style: TextStyle(color: colorDarkenGray),
                   ),
                 ],
               ),

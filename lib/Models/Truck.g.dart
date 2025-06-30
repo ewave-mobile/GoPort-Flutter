@@ -6,18 +6,16 @@ part of 'Truck.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Truck _$TruckFromJson(Map<String, dynamic> json) {
-  return Truck(
-    json['num'] as String,
-    json['licenseNumber'] as String,
-    json['vehicleType'] as int,
-    json['vehicleType_N'] as String,
-    json['blockType'] as int,
-    json['blocktype_n'] as String,
-    json['companyNumber'] as int,
-    json['isByPass'] as bool,
-  );
-}
+Truck _$TruckFromJson(Map<String, dynamic> json) => Truck(
+      json['num'] as String,
+      json['licenseNumber'] as String,
+      (json['vehicleType'] as num).toInt(),
+      json['vehicleType_N'] as String,
+      (json['blockType'] as num).toInt(),
+      json['blocktype_n'] as String,
+      (json['companyNumber'] as num).toInt(),
+      json['isByPass'] as bool,
+    );
 
 Map<String, dynamic> _$TruckToJson(Truck instance) => <String, dynamic>{
       'num': instance.num,

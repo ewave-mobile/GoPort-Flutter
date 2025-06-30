@@ -5,14 +5,14 @@ part 'JobCard.g.dart';
 
 @JsonSerializable()
 class JobCard {
-  int id;
-  String guidID;
-  double allowedWeightTruck;
-  double totalWeight;
-  DateTime createDate;
-  bool approved = false;
-  List<PortContainer> containerJobsIn = [];
-  List<PortContainer> containerJobsOut = [];
+  int? id;
+  String? guidID;
+  double? allowedWeightTruck;
+  double? totalWeight;
+  DateTime? createDate;
+  bool? approved = false;
+  List<PortContainer>? containerJobsIn = [];
+  List<PortContainer>? containerJobsOut = [];
 
   JobCard(
       {this.id,

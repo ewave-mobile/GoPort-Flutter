@@ -14,7 +14,7 @@ import 'package:goport/Models/Chassis.dart';
 import 'package:goport/Models/ImporterChassis.dart';
 import 'package:goport/Network/GoPortApi.dart';
 import 'package:goport/Providers/GeneralProvider.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,13 +33,13 @@ class _CheckOutCarsChooseLocationScreenState
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool _loading = false;
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  TabController _tabController;
+  TabController? _tabController;
   List<BottomNavViewItem> navViewItems = [];
   List<String> _importers = [];
   List<ImporterChassis> _chassis = [];
   List<Chassis> _chosenChassis = [];
   List<Chassis> _availableChassis = [];
-  String _currentImporter;
+  String? _currentImporter;
   bool _chooseImportersVisible = false;
 
   @override
@@ -67,7 +67,7 @@ class _CheckOutCarsChooseLocationScreenState
       _loading = true;
     });
 
-    Map args = ModalRoute.of(context).settings.arguments as Map;
+    Map args = ModalRoute.of(context)!.settings.arguments as Map;
     String guid = args["guid"].replaceAll("\"", "");
 
     List<String> res = await GoPortApi.instance.getImporter(guid);
@@ -89,7 +89,8 @@ class _CheckOutCarsChooseLocationScreenState
         title: "",
         okButton: AppLocalizations.of(context).translate("Yes"),
         cancelButton: AppLocalizations.of(context).translate("No"),
-        message: AppLocalizations.of(context).translate("The data you entered will be deleted, confirm?"),
+        message: AppLocalizations.of(context)
+            .translate("The data you entered will be deleted, confirm?"),
         onOk: () {
           Navigator.of(context).pop();
         });
@@ -97,13 +98,14 @@ class _CheckOutCarsChooseLocationScreenState
 
   _onNext() async {
     if (_chassis.length > 0) {
-      int index = _chassis.indexWhere((element) => element.selected != null && element.selected);
+      int index = _chassis.indexWhere(
+          (element) => element.selected != null && element.selected!);
       if (index != -1) {
-        Map args = ModalRoute.of(context).settings.arguments as Map;
+        Map args = ModalRoute.of(context)!.settings.arguments as Map;
         String guidID = args["guid"].replaceAll("\"", "");
 
         List<ImporterChassis> selectedChassis =
-            _chassis.where((e) => e.selected != null && e.selected).toList();
+            _chassis.where((e) => e.selected != null && e.selected!).toList();
 
         setState(() {
           _loading = true;
@@ -140,7 +142,7 @@ class _CheckOutCarsChooseLocationScreenState
       }
     }
 
-    Utils.showToast(
+    Utils.showToast(context,
         AppLocalizations.of(context).translate("You must choose location"));
   }
 
@@ -149,11 +151,11 @@ class _CheckOutCarsChooseLocationScreenState
       _loading = true;
     });
 
-    Map args = ModalRoute.of(context).settings.arguments as Map;
+    Map args = ModalRoute.of(context)!.settings.arguments as Map;
     String guid = args["guid"].replaceAll("\"", "");
 
-    List<ImporterChassis> res =
-        await GoPortApi.instance.getChassisByImporter(guid, _currentImporter);
+    List<ImporterChassis> res = await GoPortApi.instance
+        .getChassisByImporter(guid, _currentImporter ?? "");
 
     setState(() {
       _loading = false;
@@ -170,13 +172,13 @@ class _CheckOutCarsChooseLocationScreenState
     final item = _chassis[index];
     return InkWell(
       onTap: () {
-        item.selected = item.selected != null ? !item.selected : true;
-        setState(() {
-
-        });
+        item.selected = item.selected != null ? !item.selected! : true;
+        setState(() {});
       },
       child: Container(
-        color: item.selected != null && item.selected ? colorBackground : Colors.transparent,
+        color: item.selected != null && item.selected!
+            ? colorBackground
+            : Colors.transparent,
         child: Column(
           children: [
             Padding(
@@ -186,7 +188,7 @@ class _CheckOutCarsChooseLocationScreenState
                   Row(
                     children: [
                       Text(
-                        item.location,
+                        item.location ?? "",
                         style: TextStyle(
                             color: colorLogo2,
                             fontSize: 17,
@@ -204,7 +206,8 @@ class _CheckOutCarsChooseLocationScreenState
                         children: [
                           Text(
                             AppLocalizations.of(context)
-                                .translate("Manufacturer") + ":",
+                                    .translate("Manufacturer") +
+                                ":",
                             style:
                                 TextStyle(color: colorLightGray, fontSize: 13),
                           ),
@@ -212,7 +215,7 @@ class _CheckOutCarsChooseLocationScreenState
                             width: 6,
                           ),
                           Text(
-                            item.manufacturer,
+                            item.manufacturer ?? "",
                             style: TextStyle(color: Colors.black, fontSize: 13),
                           )
                         ],
@@ -220,7 +223,8 @@ class _CheckOutCarsChooseLocationScreenState
                       Row(
                         children: [
                           Text(
-                            AppLocalizations.of(context).translate("Model") + ":",
+                            AppLocalizations.of(context).translate("Model") +
+                                ":",
                             style:
                                 TextStyle(color: colorLightGray, fontSize: 13),
                           ),
@@ -228,7 +232,7 @@ class _CheckOutCarsChooseLocationScreenState
                             width: 6,
                           ),
                           Text(
-                            item.model,
+                            item.model ?? "",
                             style: TextStyle(color: Colors.black, fontSize: 13),
                           ),
                           SizedBox(
@@ -275,7 +279,8 @@ class _CheckOutCarsChooseLocationScreenState
             title: "",
             okButton: AppLocalizations.of(context).translate("Yes"),
             cancelButton: AppLocalizations.of(context).translate("No"),
-            message: AppLocalizations.of(context).translate("The data you entered will be deleted, confirm?"),
+            message: AppLocalizations.of(context)
+                .translate("The data you entered will be deleted, confirm?"),
             onOk: () {
               Navigator.of(context).pop();
             });
@@ -304,7 +309,7 @@ class _CheckOutCarsChooseLocationScreenState
                           title: AppLocalizations.of(context)
                               .translate("Choose importer"),
                           options: _importers,
-                          selected: _currentImporter,
+                          selected: _currentImporter ?? "",
                           onSelect: (index, value) {
                             setState(() {
                               _currentImporter = value;

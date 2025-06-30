@@ -6,12 +6,11 @@ part of 'NotTakePhotoReason.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-NotTakePhotoReason _$NotTakePhotoReasonFromJson(Map<String, dynamic> json) {
-  return NotTakePhotoReason(
-    id: json['id'] as int,
-    description: json['description'] as String,
-  );
-}
+NotTakePhotoReason _$NotTakePhotoReasonFromJson(Map<String, dynamic> json) =>
+    NotTakePhotoReason(
+      id: (json['id'] as num).toInt(),
+      description: json['description'] as String,
+    );
 
 Map<String, dynamic> _$NotTakePhotoReasonToJson(NotTakePhotoReason instance) =>
     <String, dynamic>{

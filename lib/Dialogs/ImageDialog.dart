@@ -7,7 +7,7 @@ class ImageDialog extends StatefulWidget {
   final String imagePath;
   final Function onClose;
 
-  ImageDialog({this.imagePath, this.onClose});
+  ImageDialog({required this.imagePath, required this.onClose});
 
   @override
   _ImageDialogState createState() => _ImageDialogState();
@@ -17,7 +17,7 @@ class _ImageDialogState extends State<ImageDialog> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: widget.onClose,
+      onTap: () => widget.onClose(),
       child: Container(
         color: Colors.black.withOpacity(0.5),
         child: Center(

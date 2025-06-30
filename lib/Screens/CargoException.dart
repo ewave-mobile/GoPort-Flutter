@@ -25,7 +25,7 @@ import 'package:goport/Network/GoPortApi.dart';
 import 'package:goport/Providers/GeneralProvider.dart';
 import 'package:goport/Screens/ActionTypeScreen.dart';
 import 'package:intl/intl.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -72,7 +72,7 @@ class _CargoExceptionScreenState extends State<CargoExceptionScreen>
   bool _activeWeightMissing = false;
   bool _goodsMissing = false;
 
-  Uint8List _signatureData;
+  Uint8List? _signatureData;
 
   @override
   void initState() {
@@ -84,11 +84,14 @@ class _CargoExceptionScreenState extends State<CargoExceptionScreen>
       _loading = true;
     });
 
-    final generalProvider = Provider.of<GeneralProvider>(context, listen: false);
+    final generalProvider =
+        Provider.of<GeneralProvider>(context, listen: false);
     ChargeException chargeException = new ChargeException();
-    chargeException.driverTZ = generalProvider.driver.tz;
-    chargeException.driverName = generalProvider.driver.firstName + " " + generalProvider.driver.lastName;
-    chargeException.companyName = generalProvider.driver.companyName;
+    chargeException.driverTZ = generalProvider.driver!.tz;
+    chargeException.driverName = generalProvider.driver!.firstName! +
+        " " +
+        generalProvider.driver!.lastName!;
+    chargeException.companyName = generalProvider.driver!.companyName;
     chargeException.containerNum = _containerNumController.text;
     chargeException.truckNum = _truckNumController.text;
     chargeException.trailerNum = _trailerNumController.text;
@@ -110,7 +113,7 @@ class _CargoExceptionScreenState extends State<CargoExceptionScreen>
       chargeException.goodsMismatchedRemark = _goodsController.text;
     }
 
-    String base64Image = Utils.convertImageBytesToBase64(_signatureData);
+    String base64Image = Utils.convertImageBytesToBase64(_signatureData!);
     chargeException.signature = base64Image;
 
     chargeException.createDate = DateTime.now();
@@ -122,10 +125,12 @@ class _CargoExceptionScreenState extends State<CargoExceptionScreen>
     });
 
     if (res) {
-      Utils.showToast(AppLocalizations.of(context).translate("The details were successfully submitted."));
+      Utils.showToast(context,AppLocalizations.of(context)
+          .translate("The details were successfully submitted."));
       Navigator.pop(context, true);
     } else {
-      Utils.showToast(AppLocalizations.of(context).translate("The details failed to submit."));
+      Utils.showToast(context,AppLocalizations.of(context)
+          .translate("The details failed to submit."));
     }
   }
 
@@ -849,7 +854,7 @@ class _CargoExceptionScreenState extends State<CargoExceptionScreen>
                                         error = true;
                                       }
                                     } else {
-                                      Utils.showToast(
+                                      Utils.showToast(context,
                                           AppLocalizations.of(context)
                                               .translate(
                                                   "Delay reason is missing"));
@@ -920,8 +925,8 @@ class _CargoExceptionScreenState extends State<CargoExceptionScreen>
                 ),
                 expandedIndex == index
                     ? Column(
-                      children: [
-                        Row(
+                        children: [
+                          Row(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               InkWell(
@@ -930,10 +935,11 @@ class _CargoExceptionScreenState extends State<CargoExceptionScreen>
                                   decoration: BoxDecoration(
                                       color: Colors.white,
                                       border: Border.all(color: colorGray)),
-                                  width: MediaQuery.of(context).size.width - 100,
+                                  width:
+                                      MediaQuery.of(context).size.width - 100,
                                   height: 100,
                                   child: _signatureData != null
-                                      ? Image.memory(_signatureData)
+                                      ? Image.memory(_signatureData!)
                                       : Container(),
                                 ),
                               ),
@@ -947,57 +953,62 @@ class _CargoExceptionScreenState extends State<CargoExceptionScreen>
                               )
                             ],
                           ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                              child: Container(
-                                color: buttonColor,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 32.0, vertical: 6),
-                                child: Text(
-                                  AppLocalizations.of(context).translate("Prev"),
-                                  style: TextStyle(
-                                      color: Colors.white, fontWeight: FontWeight.bold),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              InkWell(
+                                child: Container(
+                                  color: buttonColor,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 32.0, vertical: 6),
+                                  child: Text(
+                                    AppLocalizations.of(context)
+                                        .translate("Prev"),
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
+                                onTap: () {
+                                  setState(() {
+                                    expandedIndex = 1;
+                                  });
+                                },
                               ),
-                              onTap: () {
-                                setState(() {
-                                  expandedIndex = 1;
-                                });
-                              },
-                            ),
-                            InkWell(
-                              child: Container(
-                                color: buttonColor,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 32.0, vertical: 6),
-                                child: Text(
-                                  AppLocalizations.of(context).translate("Next"),
-                                  style: TextStyle(
-                                      color: Colors.white, fontWeight: FontWeight.bold),
+                              InkWell(
+                                child: Container(
+                                  color: buttonColor,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 32.0, vertical: 6),
+                                  child: Text(
+                                    AppLocalizations.of(context)
+                                        .translate("Next"),
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
+                                onTap: () {
+                                  setState(() {
+                                    if (_signatureData == null) {
+                                      Utils.showToast(context,AppLocalizations.of(
+                                              context)
+                                          .translate("Signature is mandatory"));
+                                    } else {
+                                      setState(() {
+                                        expandedIndex = 3;
+                                      });
+                                    }
+                                  });
+                                },
                               ),
-                              onTap: () {
-                                setState(() {
-                                  if (_signatureData == null) {
-                                    Utils.showToast(AppLocalizations.of(context)
-                                        .translate("Signature is mandatory"));
-                                  } else {
-                                    setState(() {
-                                      expandedIndex = 3;
-                                    });
-                                  }
-                                });
-                              },
-                            ),
-                          ],
-                        )
-                      ],
-                    )
+                            ],
+                          )
+                        ],
+                      )
                     : Container(),
               ],
             ));
@@ -1048,58 +1059,62 @@ class _CargoExceptionScreenState extends State<CargoExceptionScreen>
                 ),
                 expandedIndex == index
                     ? Column(
-                      children: [
-                        Text(
-                            AppLocalizations.of(context)
-                                .translate("Press to send the details"),
-                            style: TextStyle(
-                              fontSize: 20,
-                                color: colorDarkenGray,
-                                fontWeight: FontWeight.bold)),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                              child: Container(
-                                color: buttonColor,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 32.0, vertical: 6),
-                                child: Text(
-                                  AppLocalizations.of(context).translate("Prev"),
-                                  style: TextStyle(
-                                      color: Colors.white, fontWeight: FontWeight.bold),
+                        children: [
+                          Text(
+                              AppLocalizations.of(context)
+                                  .translate("Press to send the details"),
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: colorDarkenGray,
+                                  fontWeight: FontWeight.bold)),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              InkWell(
+                                child: Container(
+                                  color: buttonColor,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 32.0, vertical: 6),
+                                  child: Text(
+                                    AppLocalizations.of(context)
+                                        .translate("Prev"),
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
+                                onTap: () {
+                                  setState(() {
+                                    expandedIndex = 2;
+                                  });
+                                },
                               ),
-                              onTap: () {
-                                setState(() {
-                                  expandedIndex = 2;
-                                });
-                              },
-                            ),
-                            InkWell(
-                              child: Container(
-                                color: buttonColor,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 32.0, vertical: 6),
-                                child: Text(
-                                  AppLocalizations.of(context).translate("Next"),
-                                  style: TextStyle(
-                                      color: Colors.white, fontWeight: FontWeight.bold),
+                              InkWell(
+                                child: Container(
+                                  color: buttonColor,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 32.0, vertical: 6),
+                                  child: Text(
+                                    AppLocalizations.of(context)
+                                        .translate("Next"),
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
+                                onTap: () {
+                                  setState(() {
+                                    _onUpdateCargoException();
+                                  });
+                                },
                               ),
-                              onTap: () {
-                                setState(() {
-                                  _onUpdateCargoException();
-                                });
-                              },
-                            ),
-                          ],
-                        )
-                      ],
-                    )
+                            ],
+                          )
+                        ],
+                      )
                     : Container(),
               ],
             ));

@@ -14,7 +14,7 @@ import 'package:goport/Models/PortContainer.dart';
 import 'package:goport/Models/Technician.dart';
 import 'package:goport/Network/GoPortApi.dart';
 import 'package:goport/Providers/GeneralProvider.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,10 +30,10 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
     with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   List<PortContainer> containers = [];
-  bool _loading;
-  AvailableJobs _availableJobs;
-  List<Technician> _techniciansList = [];
-  TabController _tabController;
+  late bool _loading;
+  AvailableJobs? _availableJobs;
+  List<Technician?> _techniciansList = [];
+  TabController? _tabController;
   List<PortContainer> _selectedInContainers = [];
   List<PortContainer> _selectedOutContainers = [];
   List<BottomNavViewItem> navViewItems = [];
@@ -60,8 +60,8 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
       _loading = true;
     });
 
-    AvailableJobs res =
-        await GoPortApi.instance.getAvailableJobs(driver.tz, truck.num);
+    AvailableJobs? res =
+        await GoPortApi.instance.getAvailableJobs(driver!.tz ?? "", truck!.num);
 
     setState(() {
       _loading = false;
@@ -69,11 +69,14 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
 
     if (res != null) {
       if (res.containerJobsIn.isNotEmpty || res.containerJobsOut.isNotEmpty) {
+        List<PortContainer> selectedInContainers = res.containerJobsIn
+            .where((item) => item.draftID != null && item.draftID! > 0)
+            .toList();
+        List<PortContainer> selectedOutContainers = res.containerJobsOut
+            .where((item) => item.draftID != null && item.draftID! > 0)
+            .toList();
 
-        List<PortContainer> selectedInContainers = res.containerJobsIn.where((item) => item.draftID != null && item.draftID > 0).toList();
-        List<PortContainer> selectedOutContainers = res.containerJobsOut.where((item) => item.draftID != null && item.draftID > 0).toList();
-
-        List<Technician> techniciansList =
+        List<Technician?> techniciansList =
             await GoPortApi.instance.getTechnicians();
         setState(() {
           _availableJobs = res;
@@ -81,7 +84,6 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
           _selectedInContainers = selectedInContainers;
           _selectedOutContainers = selectedOutContainers;
         });
-
       } else {
         Utils.showAlertDialog(
             context: context,
@@ -97,25 +99,24 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
 
   _onNext() {
     final generalProvider =
-    Provider.of<GeneralProvider>(context, listen: false);
+        Provider.of<GeneralProvider>(context, listen: false);
     final driver = generalProvider.driver;
     generalProvider.selectedInContainers = _selectedInContainers;
     generalProvider.selectedOutContainers = _selectedOutContainers;
 
     //TODO: remove
-    if (driver.autoLaneAuthorization && _selectedInContainers.length > 0) {
-
-      Utils.showToast(AppLocalizations.of(context)
-          .translate("You are approved for green path, please enter seal number and picture"));
+    if (driver!.autoLaneAuthorization! && _selectedInContainers.length > 0) {
+      Utils.showToast(context,AppLocalizations.of(context).translate(
+          "You are approved for green path, please enter seal number and picture"));
 
       Future.delayed(Duration(milliseconds: 1000), () {
         Navigator.of(context).pushNamed("AutoLaneScreen");
       });
     } else {
-      if (_selectedInContainers.length == 0 && _selectedOutContainers.length == 0) {
+      if (_selectedInContainers.length == 0 &&
+          _selectedOutContainers.length == 0) {
         Utils.showAlertDialog(
-            context: context,
-            message:"No containers selected");
+            context: context, message: "No containers selected");
       } else {
         Future.delayed(Duration(milliseconds: 500), () {
           Navigator.of(context).pushNamed("DraftJobCardScreen");
@@ -125,9 +126,11 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
   }
 
   Widget _buildOutListItem(BuildContext context, int index) {
-    final item = _availableJobs.containerJobsOut[index];
+    final item = _availableJobs!.containerJobsOut[index];
     return Container(
-      color: _selectedOutContainers.contains(item) ? colorBackground: Colors.transparent,
+      color: _selectedOutContainers.contains(item)
+          ? colorBackground
+          : Colors.transparent,
       child: Column(
         children: [
           Padding(
@@ -145,9 +148,7 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
                           } else {
                             _selectedOutContainers.add(item);
                           }
-                          setState(() {
-
-                          });
+                          setState(() {});
                         }),
                     SizedBox(
                       width: 6,
@@ -156,7 +157,7 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          item.actualCntrNo,
+                          item.actualCntrNo ?? "",
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 18,
@@ -166,7 +167,7 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
                           height: 2,
                         ),
                         Text(
-                          item.pickUpPlanTime2,
+                          item.pickUpPlanTime2 ?? "",
                           style: TextStyle(
                               color: colorLightGray,
                               fontSize: 15,
@@ -178,12 +179,20 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
                 ),
                 Row(
                   children: [
-                    item.containerType == "DG" ? Image.asset("assets/images/ic_warning_red.png", width: 20, height: 20,) : Container(),
-                    SizedBox(width: 10,),
+                    item.containerType == "DG"
+                        ? Image.asset(
+                            "assets/images/ic_warning_red.png",
+                            width: 20,
+                            height: 20,
+                          )
+                        : Container(),
+                    SizedBox(
+                      width: 10,
+                    ),
                     Container(
                       margin: EdgeInsets.only(right: 10),
                       child: Text(
-                        item.containerType,
+                        item.containerType ?? "",
                         style: TextStyle(
                             color: colorLightGray,
                             fontSize: 15,
@@ -195,7 +204,9 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
               ],
             ),
           ),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -204,13 +215,18 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
               children: [
                 Column(
                   children: [
-                    Text(AppLocalizations.of(context).translate("Agent"), style: TextStyle(
-                        color: colorLightGray,
-                        fontSize: 16, fontWeight: FontWeight.bold
-                    ),),
-                    SizedBox(height: 6,),
                     Text(
-                      item.shippingAgent,
+                      AppLocalizations.of(context).translate("Agent"),
+                      style: TextStyle(
+                          color: colorLightGray,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      item.shippingAgent ?? "",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
@@ -220,13 +236,18 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
                 ),
                 Column(
                   children: [
-                    Text(AppLocalizations.of(context).translate("Status"), style: TextStyle(
-                        color: colorLightGray,
-                        fontSize: 16, fontWeight: FontWeight.bold
-                    ),),
-                    SizedBox(height: 6,),
                     Text(
-                      item.informationStatus,
+                      AppLocalizations.of(context).translate("Status"),
+                      style: TextStyle(
+                          color: colorLightGray,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      item.informationStatus ?? "",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
@@ -236,32 +257,43 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
                 ),
                 Column(
                   children: [
-                    Text(AppLocalizations.of(context).translate("Company"), style: TextStyle(
-                        color: colorLightGray,
-                        fontSize: 16, fontWeight: FontWeight.bold
-                    ),),
-                    SizedBox(height: 6,),
                     Text(
-                      item.shipperCompanyName,
+                      AppLocalizations.of(context).translate("Company"),
+                      style: TextStyle(
+                          color: colorLightGray,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      item.shipperCompanyName ?? "",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
                           fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(height: 6,),
-                    item.remarks != null && item.remarks.isNotEmpty ? Text(
-                      item.remarks,
-                      style: TextStyle(
-                          color: colorError,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                    ) : Container(),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    item.remarks != null && item.remarks!.isNotEmpty
+                        ? Text(
+                            item.remarks!,
+                            style: TextStyle(
+                                color: colorError,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                          )
+                        : Container(),
                   ],
                 )
               ],
             ),
           ),
-          SizedBox(height: 6,),
+          SizedBox(
+            height: 6,
+          ),
           Container(
             height: 1,
             color: colorDivider,
@@ -272,9 +304,11 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
   }
 
   Widget _buildInListItem(BuildContext context, int index) {
-    final item = _availableJobs.containerJobsIn[index];
+    final item = _availableJobs!.containerJobsIn[index];
     return Container(
-      color: _selectedInContainers.contains(item) ? colorBackground: Colors.transparent,
+      color: _selectedInContainers.contains(item)
+          ? colorBackground
+          : Colors.transparent,
       child: Column(
         children: [
           Padding(
@@ -292,9 +326,7 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
                           } else {
                             _selectedInContainers.add(item);
                           }
-                          setState(() {
-
-                          });
+                          setState(() {});
                         }),
                     SizedBox(
                       width: 6,
@@ -303,7 +335,7 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          item.actualCntrNo,
+                          item.actualCntrNo ?? "",
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 18,
@@ -313,7 +345,7 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
                           height: 2,
                         ),
                         Text(
-                          item.pickUpPlanTime2,
+                          item.pickUpPlanTime2 ?? "",
                           style: TextStyle(
                               color: colorLightGray,
                               fontSize: 15,
@@ -325,14 +357,23 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
                 ),
                 Row(
                   children: [
-                    item.fullEmptyContainer != null && item.fullEmptyContainer.isNotEmpty ? Image.asset(
-                      item.fullEmptyContainer == "EMPTY" ? "assets/images/ic_box_empty.png" : "assets/images/ic_box_fill.png", width: 20, height: 20,
-                    ) : Container(),
-                    SizedBox(width: 6,),
+                    item.fullEmptyContainer != null &&
+                            item.fullEmptyContainer!.isNotEmpty
+                        ? Image.asset(
+                            item.fullEmptyContainer == "EMPTY"
+                                ? "assets/images/ic_box_empty.png"
+                                : "assets/images/ic_box_fill.png",
+                            width: 20,
+                            height: 20,
+                          )
+                        : Container(),
+                    SizedBox(
+                      width: 6,
+                    ),
                     Container(
                       margin: EdgeInsets.only(right: 10),
                       child: Text(
-                        item.size,
+                        item.size ?? "",
                         style: TextStyle(
                             color: colorLightGray,
                             fontSize: 15,
@@ -344,7 +385,9 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
               ],
             ),
           ),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -352,13 +395,18 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
               children: [
                 Column(
                   children: [
-                    Text(AppLocalizations.of(context).translate("Type"), style: TextStyle(
-                        color: colorLightGray,
-                        fontSize: 16, fontWeight: FontWeight.bold
-                    ),),
-                    SizedBox(height: 6,),
                     Text(
-                      item.containerType,
+                      AppLocalizations.of(context).translate("Type"),
+                      style: TextStyle(
+                          color: colorLightGray,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      item.containerType ?? "",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
@@ -368,11 +416,16 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
                 ),
                 Column(
                   children: [
-                    Text(AppLocalizations.of(context).translate("Weight"), style: TextStyle(
-                        color: colorLightGray,
-                        fontSize: 16, fontWeight: FontWeight.bold
-                    ),),
-                    SizedBox(height: 6,),
+                    Text(
+                      AppLocalizations.of(context).translate("Weight"),
+                      style: TextStyle(
+                          color: colorLightGray,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
                     Text(
                       item.weight.toString(),
                       style: TextStyle(
@@ -384,17 +437,24 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
                 ),
                 Column(
                   children: [
-                    Text("", style: TextStyle(
-                        color: colorLightGray,
-                        fontSize: 16, fontWeight: FontWeight.bold
-                    ),),
-                    SizedBox(height: 6,),
+                    Text(
+                      "",
+                      style: TextStyle(
+                          color: colorLightGray,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
                   ],
                 )
               ],
             ),
           ),
-          SizedBox(height: 6,),
+          SizedBox(
+            height: 6,
+          ),
           Container(
             height: 1,
             color: colorDivider,
@@ -413,7 +473,7 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
         ),
         ListView.builder(
             shrinkWrap: true,
-            itemCount: _availableJobs.containerJobsIn.length,
+            itemCount: _availableJobs!.containerJobsIn.length,
             itemBuilder: (BuildContext buildContext, int index) {
               return _buildInListItem(buildContext, index);
             }),
@@ -430,7 +490,7 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
         ),
         ListView.builder(
             shrinkWrap: true,
-            itemCount: _availableJobs.containerJobsOut.length,
+            itemCount: _availableJobs!.containerJobsOut.length,
             itemBuilder: (BuildContext buildContext, int index) {
               return _buildOutListItem(buildContext, index);
             }),
@@ -465,11 +525,11 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
                             tabs: [
                               Tab(
                                 text:
-                                    '${AppLocalizations.of(context).translate("In Containers")} (${_availableJobs != null ? _availableJobs.containerJobsOut.length : 0})',
+                                    '${AppLocalizations.of(context).translate("In Containers")} (${_availableJobs != null ? _availableJobs!.containerJobsOut.length : 0})',
                               ),
                               Tab(
                                 text:
-                                    '${AppLocalizations.of(context).translate("Out Containers")} (${_availableJobs != null ? _availableJobs.containerJobsIn.length : 0})',
+                                    '${AppLocalizations.of(context).translate("Out Containers")} (${_availableJobs != null ? _availableJobs!.containerJobsIn.length : 0})',
                               )
                             ],
                             controller: _tabController,
@@ -477,9 +537,9 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
                           ),
                           _availableJobs != null
                               ? AnimatedBuilder(
-                                  animation: _tabController.animation,
+                                  animation: _tabController!.animation!,
                                   builder: (ctx, child) {
-                                    if (_tabController.index == 0) {
+                                    if (_tabController!.index == 0) {
                                       return _buildOutListView(context);
                                     } else
                                       return _buildInListView(context);

@@ -2,14 +2,20 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class AppDialog extends StatelessWidget {
-  String title;
-  String message;
+  String? title;
+  String? message;
   String okButton;
-  String cancelButton;
-  VoidCallback onOK;
-  VoidCallback onCancel;
+  String? cancelButton;
+  VoidCallback? onOK;
+  VoidCallback? onCancel;
 
-  AppDialog({this.title, this.message, this.okButton = "OK", this.onOK, this.cancelButton, this.onCancel});
+  AppDialog(
+      { this.title,
+      this.message,
+      this.okButton = "OK",
+      this.onOK,
+      this.cancelButton,
+      this.onCancel});
 
   TextStyle textStyle = TextStyle(color: Colors.black);
 
@@ -24,32 +30,34 @@ class AppDialog extends StatelessWidget {
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           titlePadding: EdgeInsets.all(0),
           title: new Text(
-            title,
+            title ?? "",
             style: textStyle,
           ),
           content: new Text(
-            message,
+            message ?? "",
             style: textStyle,
           ),
           actions: <Widget>[
-            new FlatButton(
+            new TextButton(
               child: new Text(this.okButton),
               onPressed: () {
                 Navigator.pop(context);
                 if (onOK != null) {
-                  onOK();
+                  onOK!();
                 }
               },
             ),
-            this.cancelButton != null ? new FlatButton(
-              child: Text(this.cancelButton),
-              onPressed: () {
-                Navigator.of(context).pop();
-                if (onCancel != null) {
-                  onCancel();
-                }
-              },
-            ) : Container(),
+            this.cancelButton != null
+                ? new TextButton(
+                    child: Text(this.cancelButton ?? ""),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      if (onCancel != null) {
+                        onCancel!();
+                      }
+                    },
+                  )
+                : Container(),
           ],
         ));
   }

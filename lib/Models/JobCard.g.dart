@@ -6,28 +6,22 @@ part of 'JobCard.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-JobCard _$JobCardFromJson(Map<String, dynamic> json) {
-  return JobCard(
-    id: json['id'] as int,
-    guidID: json['guidID'] as String,
-    allowedWeightTruck: (json['allowedWeightTruck'] as num)?.toDouble(),
-    totalWeight: (json['totalWeight'] as num)?.toDouble(),
-    createDate: json['createDate'] == null
-        ? null
-        : DateTime.parse(json['createDate'] as String),
-    approved: json['approved'] as bool,
-    containerJobsIn: (json['containerJobsIn'] as List)
-        ?.map((e) => e == null
-            ? null
-            : PortContainer.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-    containerJobsOut: (json['containerJobsOut'] as List)
-        ?.map((e) => e == null
-            ? null
-            : PortContainer.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-  );
-}
+JobCard _$JobCardFromJson(Map<String, dynamic> json) => JobCard(
+      id: (json['id'] as num?)?.toInt(),
+      guidID: json['guidID'] as String?,
+      allowedWeightTruck: (json['allowedWeightTruck'] as num?)?.toDouble(),
+      totalWeight: (json['totalWeight'] as num?)?.toDouble(),
+      createDate: json['createDate'] == null
+          ? null
+          : DateTime.parse(json['createDate'] as String),
+      approved: json['approved'] as bool?,
+      containerJobsIn: (json['containerJobsIn'] as List<dynamic>?)
+          ?.map((e) => PortContainer.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      containerJobsOut: (json['containerJobsOut'] as List<dynamic>?)
+          ?.map((e) => PortContainer.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
 Map<String, dynamic> _$JobCardToJson(JobCard instance) => <String, dynamic>{
       'id': instance.id,

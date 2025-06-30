@@ -17,7 +17,7 @@ import 'package:goport/Models/ImporterChassis.dart';
 import 'package:goport/Network/GoPortApi.dart';
 import 'package:goport/Providers/GeneralProvider.dart';
 import 'package:goport/Screens/ActionTypeScreen.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,15 +26,14 @@ class CheckOutSummaryScreen extends StatefulWidget {
   static String id = 'CheckOutSummaryScreen';
 
   @override
-  _CheckOutSummaryScreenState createState() =>
-      _CheckOutSummaryScreenState();
+  _CheckOutSummaryScreenState createState() => _CheckOutSummaryScreenState();
 }
 
 class _CheckOutSummaryScreenState extends State<CheckOutSummaryScreen>
     with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool _loading = false;
-  TabController _tabController;
+  TabController? _tabController;
   List<BottomNavViewItem> navViewItems = [];
   List<Chassis> _chassis = [];
 
@@ -54,7 +53,7 @@ class _CheckOutSummaryScreenState extends State<CheckOutSummaryScreen>
   }
 
   _loadData() {
-    Map args = ModalRoute.of(context).settings.arguments as Map;
+    Map args = ModalRoute.of(context)!.settings.arguments as Map;
     List<Chassis> chosenChassis = args["chosenChassis"];
 
     setState(() {
@@ -68,12 +67,15 @@ class _CheckOutSummaryScreenState extends State<CheckOutSummaryScreen>
 
   _onNext() {
     final generalProvider =
-    Provider.of<GeneralProvider>(context, listen: false);
+        Provider.of<GeneralProvider>(context, listen: false);
     generalProvider.setShowBackButton(false);
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ActionTypeScreen()), (route) => false);
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => ActionTypeScreen()),
+        (route) => false);
   }
 
-  _onReportDamage(Chassis chassis) async{
+  _onReportDamage(Chassis chassis) async {
     setState(() {
       _loading = true;
     });
@@ -84,13 +86,14 @@ class _CheckOutSummaryScreenState extends State<CheckOutSummaryScreen>
       _loading = false;
     });
 
-    Utils.showToast(AppLocalizations.of(context).translate(res ? "SMS was successfully sent" : "Failed to send SMS"));
+    Utils.showToast(context,AppLocalizations.of(context)
+        .translate(res ? "SMS was successfully sent" : "Failed to send SMS"));
   }
 
   Widget _buildListItem(BuildContext context, int index) {
     final item = _chassis[index];
     return Dismissible(
-      key: Key(item.chassisID),
+      key: Key(item.chassisID ?? ""),
       onDismissed: (direction) {
         Utils.showConfirmDialog(
             context: context,
@@ -120,8 +123,11 @@ class _CheckOutSummaryScreenState extends State<CheckOutSummaryScreen>
                           Row(
                             children: [
                               Text(
-                                item.chassisID,
-                                style: TextStyle(color: colorLogo2, fontSize: 18, fontWeight: FontWeight.bold),
+                                item.chassisID ?? "",
+                                style: TextStyle(
+                                    color: colorLogo2,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
                               )
                             ],
                           ),
@@ -133,15 +139,19 @@ class _CheckOutSummaryScreenState extends State<CheckOutSummaryScreen>
                               Row(
                                 children: [
                                   Text(
-                                    AppLocalizations.of(context).translate("Manufacturer") + ":",
-                                    style: TextStyle(color: colorLightGray, fontSize: 12),
+                                    AppLocalizations.of(context)
+                                            .translate("Manufacturer") +
+                                        ":",
+                                    style: TextStyle(
+                                        color: colorLightGray, fontSize: 12),
                                   ),
                                   SizedBox(
                                     width: 4,
                                   ),
                                   Text(
-                                    item.manufacturer,
-                                    style: TextStyle(color: Colors.black, fontSize: 12),
+                                    item.manufacturer ?? "",
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 12),
                                   )
                                 ],
                               ),
@@ -151,15 +161,19 @@ class _CheckOutSummaryScreenState extends State<CheckOutSummaryScreen>
                               Row(
                                 children: [
                                   Text(
-                                    AppLocalizations.of(context).translate("Model") + ":",
-                                    style: TextStyle(color: colorLightGray, fontSize: 12),
+                                    AppLocalizations.of(context)
+                                            .translate("Model") +
+                                        ":",
+                                    style: TextStyle(
+                                        color: colorLightGray, fontSize: 12),
                                   ),
                                   SizedBox(
                                     width: 4,
                                   ),
                                   Text(
-                                    item.model,
-                                    style: TextStyle(color: Colors.black, fontSize: 12),
+                                    item.model ?? "",
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 12),
                                   ),
                                 ],
                               )
@@ -225,12 +239,20 @@ class _CheckOutSummaryScreenState extends State<CheckOutSummaryScreen>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(AppLocalizations.of(context).translate("Summary"), style: TextStyle(
-                          fontWeight: FontWeight.bold, color:colorDarkenGray, fontSize: 18
-                        ),),
-                        Text(_chassis.length.toString(), style: TextStyle(
-                            fontWeight: FontWeight.bold, color:colorLogo2, fontSize: 18
-                        ),)
+                        Text(
+                          AppLocalizations.of(context).translate("Summary"),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: colorDarkenGray,
+                              fontSize: 18),
+                        ),
+                        Text(
+                          _chassis.length.toString(),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: colorLogo2,
+                              fontSize: 18),
+                        )
                       ],
                     ),
                   ),
@@ -240,7 +262,7 @@ class _CheckOutSummaryScreenState extends State<CheckOutSummaryScreen>
                   Container(height: 1, color: colorDivider),
                   Expanded(
                     child: ListView.builder(
-                      padding: EdgeInsets.only(bottom: 60),
+                        padding: EdgeInsets.only(bottom: 60),
                         itemCount: _chassis.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
@@ -265,7 +287,7 @@ class _CheckOutSummaryScreenState extends State<CheckOutSummaryScreen>
     );
   }
 
-  _onChassisRemoved(Chassis currentChassis) async{
+  _onChassisRemoved(Chassis currentChassis) async {
     setState(() {
       _loading = true;
     });
@@ -280,7 +302,8 @@ class _CheckOutSummaryScreenState extends State<CheckOutSummaryScreen>
         _chassis.remove(currentChassis);
       });
     } else {
-      Utils.showToast(AppLocalizations.of(context).translate("Shilda not available"));
+      Utils.showToast(context,
+          AppLocalizations.of(context).translate("Shilda not available"));
     }
   }
 }

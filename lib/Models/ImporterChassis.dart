@@ -3,13 +3,13 @@ part 'ImporterChassis.g.dart';
 
 @JsonSerializable()
 class ImporterChassis {
-  String importer;
-  String manufacturer;
-  String model;
-  String location;
-  String destination;
-  int qty;
-  bool selected = false;
+  String? importer;
+  String? manufacturer;
+  String? model;
+  String? location;
+  String? destination;
+  int? qty;
+  bool? selected = false;
 
   ImporterChassis({this.importer, this.manufacturer, this.model, this.location,
       this.destination, this.qty, this.selected = false});

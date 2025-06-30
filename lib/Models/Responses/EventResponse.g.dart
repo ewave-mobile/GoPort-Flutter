@@ -6,14 +6,12 @@ part of 'EventResponse.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-EventResponse _$EventResponseFromJson(Map<String, dynamic> json) {
-  return EventResponse(
-    (json['iruimList'] as List)
-        ?.map(
-            (e) => e == null ? null : Event.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-  );
-}
+EventResponse _$EventResponseFromJson(Map<String, dynamic> json) =>
+    EventResponse(
+      (json['iruimList'] as List<dynamic>)
+          .map((e) => Event.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
 Map<String, dynamic> _$EventResponseToJson(EventResponse instance) =>
     <String, dynamic>{

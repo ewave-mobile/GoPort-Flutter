@@ -18,17 +18,20 @@ class UpdateSerialDialog extends StatefulWidget {
   final Function onCancel;
   final PortContainer portContainer;
 
-  UpdateSerialDialog({this.onConfirm, this.onCancel, this.portContainer});
+  UpdateSerialDialog(
+      {required this.onConfirm,
+      required this.onCancel,
+      required this.portContainer});
 
   @override
   _UpdateSerialDialogState createState() => _UpdateSerialDialogState();
 }
 
 class _UpdateSerialDialogState extends State<UpdateSerialDialog> {
-  TextEditingController _serialNumController;
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  String _currentImagePath;
-  PortContainer _portContainer;
+  late TextEditingController _serialNumController;
+  late Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  late String _currentImagePath;
+  late PortContainer _portContainer;
 
   @override
   void initState() {
@@ -63,8 +66,9 @@ class _UpdateSerialDialogState extends State<UpdateSerialDialog> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      item.actualCntrNo,
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      item.actualCntrNo ?? "",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(
                       height: 16,
@@ -93,8 +97,8 @@ class _UpdateSerialDialogState extends State<UpdateSerialDialog> {
                                 contentPadding: EdgeInsets.symmetric(
                                     horizontal: 0, vertical: 4),
                                 focusColor: colorLogo2,
-                                hintStyle:
-                                    TextStyle(fontSize: 20, color: Colors.grey)),
+                                hintStyle: TextStyle(
+                                    fontSize: 20, color: Colors.grey)),
                             style: TextStyle(fontSize: 20, color: colorLogo),
                             keyboardType: TextInputType.number,
                           ),
@@ -111,7 +115,7 @@ class _UpdateSerialDialogState extends State<UpdateSerialDialog> {
                               _onTakePicture(item);
                             },
                             child: Image.file(
-                              File(item.imagePath),
+                              File(item.imagePath ?? ""),
                               width: 30,
                               height: 30,
                               fit: BoxFit.cover,
@@ -132,8 +136,7 @@ class _UpdateSerialDialogState extends State<UpdateSerialDialog> {
                           ),
                           onLongPress: () {
                             setState(() {
-                              _currentImagePath =
-                                  item.imagePath;
+                              _currentImagePath = item.imagePath ?? "";
                             });
                           },
                         ))
@@ -149,7 +152,7 @@ class _UpdateSerialDialogState extends State<UpdateSerialDialog> {
               child: Row(
                 children: [
                   InkWell(
-                    onTap: () async{
+                    onTap: () async {
                       final serialNum = _serialNumController.text;
                       _portContainer.sealNo = serialNum;
                       widget.onConfirm(_portContainer);
@@ -164,7 +167,9 @@ class _UpdateSerialDialogState extends State<UpdateSerialDialog> {
                     width: 20,
                   ),
                   InkWell(
-                    onTap: (){Navigator.of(context).pop(context);},
+                    onTap: () {
+                      Navigator.of(context).pop(context);
+                    },
                     child: Text(
                       AppLocalizations.of(context).translate("Cancel"),
                       style: TextStyle(
@@ -176,13 +181,13 @@ class _UpdateSerialDialogState extends State<UpdateSerialDialog> {
             ),
             _currentImagePath != null
                 ? ImageDialog(
-              imagePath: _currentImagePath,
-              onClose: () {
-                setState(() {
-                  _currentImagePath = null;
-                });
-              },
-            )
+                    imagePath: _currentImagePath,
+                    onClose: () {
+                      setState(() {
+                        _currentImagePath = "";
+                      });
+                    },
+                  )
                 : Container()
           ],
         ),
@@ -192,13 +197,15 @@ class _UpdateSerialDialogState extends State<UpdateSerialDialog> {
 
   _onTakePicture(PortContainer portContainer) async {
     final ImagePicker _picker = ImagePicker();
-    final XFile photo = await _picker.pickImage(source: ImageSource.camera, imageQuality: 10);
+    final XFile? photo =
+        await _picker.pickImage(source: ImageSource.camera, imageQuality: 10);
     if (photo != null) {
       portContainer.imagePath = photo.path;
 
       DateFormat dateFormat = DateFormat("yyyyMMddHHmmss");
       String createDate = dateFormat.format(DateTime.now());
-      portContainer.imageName = portContainer.actualCntrNo + "_" + createDate + ".jpg";
+      portContainer.imageName =
+          portContainer.actualCntrNo! + "_" + createDate + ".jpg";
       String base64Image = Utils.convertImageToBase64(photo.path);
       portContainer.image = base64Image;
 

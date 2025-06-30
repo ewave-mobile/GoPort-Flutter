@@ -13,7 +13,7 @@ class InputTrackDialog extends StatefulWidget {
   final Function onConfirm;
   final Function onCancel;
 
-  InputTrackDialog({this.onConfirm, this.onCancel});
+  InputTrackDialog({required this.onConfirm, required this.onCancel});
 
   @override
   _InputTrackDialogState createState() => _InputTrackDialogState();
@@ -33,13 +33,15 @@ class _InputTrackDialogState extends State<InputTrackDialog> {
 
   initialize() async {
     final prefs = await _prefs;
-    Truck truck;
-    Truck trailer;
-    if (prefs.getString(Const.prefsTruck)!= null) {
-      truck = Truck.fromJson(jsonDecode(prefs.getString(Const.prefsTruck)));
+    Truck? truck;
+    Truck? trailer;
+    if (prefs.getString(Const.prefsTruck) != null) {
+      truck =
+          Truck.fromJson(jsonDecode(prefs.getString(Const.prefsTruck) ?? ""));
     }
-    if (prefs.getString(Const.prefsTrailer)!= null) {
-      trailer = Truck.fromJson(jsonDecode(prefs.getString(Const.prefsTrailer)));
+    if (prefs.getString(Const.prefsTrailer) != null) {
+      trailer =
+          Truck.fromJson(jsonDecode(prefs.getString(Const.prefsTrailer) ?? ""));
     }
 
     if (truck != null) {
@@ -61,9 +63,10 @@ class _InputTrackDialogState extends State<InputTrackDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-                AppLocalizations.of(context).translate("Insert truck details"), style: TextStyle(
-              fontSize: 18, fontWeight: FontWeight.bold, color: colorGray
-            ),),
+              AppLocalizations.of(context).translate("Insert truck details"),
+              style: TextStyle(
+                  fontSize: 18, fontWeight: FontWeight.bold, color: colorGray),
+            ),
             SizedBox(
               height: 10,
             ),
@@ -92,7 +95,8 @@ class _InputTrackDialogState extends State<InputTrackDialog> {
               controller: _trailerController,
               decoration: InputDecoration(
                   focusColor: colorLogo2,
-                  hintText: AppLocalizations.of(context).translate("Trailer number"),
+                  hintText:
+                      AppLocalizations.of(context).translate("Trailer number"),
                   hintStyle: TextStyle(fontSize: 16, color: Colors.grey)),
               style: TextStyle(fontSize: 16, color: colorLogo),
               keyboardType: TextInputType.number,
@@ -105,7 +109,7 @@ class _InputTrackDialogState extends State<InputTrackDialog> {
               child: Row(
                 children: [
                   InkWell(
-                    onTap: () async{
+                    onTap: () async {
                       final truck = _trackNumberController.text;
                       final trailer = _trailerController.text;
                       if (truck != null) {

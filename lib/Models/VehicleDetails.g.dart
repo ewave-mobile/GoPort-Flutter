@@ -6,18 +6,13 @@ part of 'VehicleDetails.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-VehicleDetails _$VehicleDetailsFromJson(Map<String, dynamic> json) {
-  return VehicleDetails(
-    json['truck'] == null
-        ? null
-        : Truck.fromJson(json['truck'] as Map<String, dynamic>),
-    json['trailer'] == null
-        ? null
-        : Truck.fromJson(json['trailer'] as Map<String, dynamic>),
-    json['blockReason'] as String,
-    json['isBlock'] as bool,
-  );
-}
+VehicleDetails _$VehicleDetailsFromJson(Map<String, dynamic> json) =>
+    VehicleDetails(
+      Truck.fromJson(json['truck'] as Map<String, dynamic>),
+      Truck.fromJson(json['trailer'] as Map<String, dynamic>),
+      json['blockReason'] as String,
+      json['isBlock'] as bool,
+    );
 
 Map<String, dynamic> _$VehicleDetailsToJson(VehicleDetails instance) =>
     <String, dynamic>{

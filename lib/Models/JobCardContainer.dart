@@ -4,13 +4,13 @@ import 'package:json_annotation/json_annotation.dart';
 part 'JobCardContainer.g.dart';
 
 @JsonSerializable()
-class JobCardContainer  {
+class JobCardContainer {
   final PortContainer container;
   final String guidID;
 
-  JobCardContainer({this.container, this.guidID});
+  JobCardContainer({required this.container, required this.guidID});
 
-  factory JobCardContainer.fromJson(Map<String, dynamic> json) => _$JobCardContainerFromJson(json);
+  factory JobCardContainer.fromJson(Map<String, dynamic> json) =>
+      _$JobCardContainerFromJson(json);
   Map<String, dynamic> toJson() => _$JobCardContainerToJson(this);
-
 }

@@ -21,7 +21,7 @@ import 'package:goport/Models/Technician.dart';
 import 'package:goport/Network/GoPortApi.dart';
 import 'package:goport/Providers/GeneralProvider.dart';
 import 'package:intl/intl.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,10 +48,9 @@ class _ShipyardDataScreenState extends State<ShipyardDataScreen>
   }
 
   _test() {
-    ships.add(Ship("ship_NO","shipnamE_ENG","stat", "sochen","razif","lasT_UPDATE", "x_GPS", "y_GPS", "zakef", false));
-    setState(() {
-
-    });
+    ships.add(Ship("ship_NO", "shipnamE_ENG", "stat", "sochen", "razif",
+        "lasT_UPDATE", "x_GPS", "y_GPS", "zakef", false));
+    setState(() {});
   }
 
   _initialize() async {
@@ -63,7 +62,7 @@ class _ShipyardDataScreenState extends State<ShipyardDataScreen>
       _loading = true;
     });
 
-    final res = await GoPortApi.instance.getShipsStatus(driver.idNumber, "");
+    final res = await GoPortApi.instance.getShipsStatus(driver!.idNumber!, "");
 
     setState(() {
       _loading = false;

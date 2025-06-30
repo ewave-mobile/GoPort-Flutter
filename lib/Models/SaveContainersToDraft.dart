@@ -7,9 +7,10 @@ class SaveContainersToDraft {
   final String driverTZ;
   final List<DraftJobCard> containersToAdd;
 
-  SaveContainersToDraft({this.driverTZ, this.containersToAdd});
+  SaveContainersToDraft(
+      {required this.driverTZ, required this.containersToAdd});
 
-  factory SaveContainersToDraft.fromJson(Map<String, dynamic> json) => _$SaveContainersToDraftFromJson(json);
+  factory SaveContainersToDraft.fromJson(Map<String, dynamic> json) =>
+      _$SaveContainersToDraftFromJson(json);
   Map<String, dynamic> toJson() => _$SaveContainersToDraftToJson(this);
-
 }

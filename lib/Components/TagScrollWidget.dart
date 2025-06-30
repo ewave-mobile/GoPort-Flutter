@@ -10,12 +10,12 @@ class EventScrollWidget extends StatefulWidget {
 
   final List<Event> events;
 
-  EventScrollWidget({this.events});
+  EventScrollWidget({required this.events});
 }
 
 class _EventScrollWidgetState extends State<EventScrollWidget> {
-  double screenWidth;
-  Timer timer;
+  late double screenWidth;
+  late Timer timer;
   int currentIndex = 0;
 
   final ScrollController scrollController = ScrollController();
@@ -26,10 +26,8 @@ class _EventScrollWidgetState extends State<EventScrollWidget> {
     // To handle AutoScroll
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       timer = Timer.periodic(Duration(seconds: 3), (time) {
-        scrollController.animateTo(
-            (currentIndex + 1) * screenWidth,
-            duration: Duration(milliseconds: 500),
-            curve: Curves.easeIn);
+        scrollController.animateTo((currentIndex + 1) * screenWidth,
+            duration: Duration(milliseconds: 500), curve: Curves.easeIn);
         currentIndex++;
       });
     });
@@ -53,7 +51,7 @@ class _EventScrollWidgetState extends State<EventScrollWidget> {
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
-            // Here you can return your own items repeat based on index 
+            // Here you can return your own items repeat based on index
             return _buildRow(widget.events[index % 2]);
           }),
     );

@@ -8,9 +8,9 @@ class NotTakePhotoReason {
   final int id;
   final String description;
 
-  NotTakePhotoReason({this.id, this.description});
+  NotTakePhotoReason({required this.id, required this.description});
 
-  factory NotTakePhotoReason.fromJson(Map<String, dynamic> json) => _$NotTakePhotoReasonFromJson(json);
+  factory NotTakePhotoReason.fromJson(Map<String, dynamic> json) =>
+      _$NotTakePhotoReasonFromJson(json);
   Map<String, dynamic> toJson() => _$NotTakePhotoReasonToJson(this);
-
 }

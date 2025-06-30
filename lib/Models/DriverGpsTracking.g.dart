@@ -6,17 +6,16 @@ part of 'DriverGpsTracking.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DriverGpsTracking _$DriverGpsTrackingFromJson(Map<String, dynamic> json) {
-  return DriverGpsTracking(
-    id: json['id'] as int,
-    lat: (json['lat'] as num)?.toDouble(),
-    lng: (json['lng'] as num)?.toDouble(),
-    serialNumber: json['serialNumber'] as String,
-    trackingDate: json['trackingDate'] == null
-        ? null
-        : DateTime.parse(json['trackingDate'] as String),
-  );
-}
+DriverGpsTracking _$DriverGpsTrackingFromJson(Map<String, dynamic> json) =>
+    DriverGpsTracking(
+      id: (json['id'] as num?)?.toInt(),
+      lat: (json['lat'] as num?)?.toDouble(),
+      lng: (json['lng'] as num?)?.toDouble(),
+      serialNumber: json['serialNumber'] as String?,
+      trackingDate: json['trackingDate'] == null
+          ? null
+          : DateTime.parse(json['trackingDate'] as String),
+    );
 
 Map<String, dynamic> _$DriverGpsTrackingToJson(DriverGpsTracking instance) =>
     <String, dynamic>{

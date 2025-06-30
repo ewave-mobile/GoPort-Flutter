@@ -16,7 +16,7 @@ import 'package:goport/Models/PortContainer.dart';
 import 'package:goport/Network/GoPortApi.dart';
 import 'package:goport/Providers/GeneralProvider.dart';
 import 'package:goport/Screens/ActionTypeScreen.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,8 +30,8 @@ class JobCardScreen extends StatefulWidget {
 
 class _JobCardScreenState extends State<JobCardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  String _guidID;
-  JobCard _jobCard;
+  String? _guidID;
+  JobCard? _jobCard;
   bool _loading = false;
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
@@ -151,7 +151,7 @@ class _JobCardScreenState extends State<JobCardScreen> {
     // setState(() {
     //   _guidID = "afe05385-c211-4952-b47a-fa9036cd388b23082021";
     // });
-    Map arguments = ModalRoute.of(context).settings.arguments as Map;
+    Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
     if (arguments.containsKey("guidID")) {
       setState(() {
         _guidID = arguments["guidID"];
@@ -165,7 +165,7 @@ class _JobCardScreenState extends State<JobCardScreen> {
       _loading = true;
     });
 
-    JobCard res = await GoPortApi.instance.getJobCardContainers(_guidID);
+    JobCard? res = await GoPortApi.instance.getJobCardContainers(_guidID ?? "");
 
     setState(() {
       _loading = false;
@@ -201,7 +201,8 @@ class _JobCardScreenState extends State<JobCardScreen> {
       _loading = true;
     });
 
-    bool res = await GoPortApi.instance.setGateStatus(driver.tz, gateStatus);
+    bool res =
+        await GoPortApi.instance.setGateStatus(driver!.tz ?? "", gateStatus);
 
     setState(() {
       _loading = false;
@@ -211,11 +212,11 @@ class _JobCardScreenState extends State<JobCardScreen> {
       if (gateStatus == GateAppStatusEnum.JobCardCancel) {
         _cancelJobCard();
       } else {
-        _jobCard.approved = true;
+        _jobCard!.approved = true;
         setState(() {});
       }
     } else {
-      Utils.showToast(
+      Utils.showToast(context,
           AppLocalizations.of(context).translate("Error setting status"));
     }
   }
@@ -244,7 +245,7 @@ class _JobCardScreenState extends State<JobCardScreen> {
     });
 
     JobCardContainer jobCardContainer =
-        new JobCardContainer(container: container, guidID: _guidID);
+        new JobCardContainer(container: container, guidID: _guidID ?? "");
 
     bool res = await GoPortApi.instance.updateJobCardSeal(jobCardContainer);
 
@@ -253,11 +254,11 @@ class _JobCardScreenState extends State<JobCardScreen> {
     });
 
     if (res) {
-      final index = _jobCard.containerJobsOut
+      final index = _jobCard!.containerJobsOut!
           .indexWhere((element) => element.id == container.id);
       if (index != -1) {
         setState(() {
-          _jobCard.containerJobsOut[index] = container;
+          _jobCard!.containerJobsOut![index] = container;
         });
       }
     } else {
@@ -272,14 +273,15 @@ class _JobCardScreenState extends State<JobCardScreen> {
       _loading = true;
     });
 
-    bool res = await GoPortApi.instance.cancelJobCard(driver.tz, _guidID);
+    bool res =
+        await GoPortApi.instance.cancelJobCard(driver!.tz ?? "", _guidID!);
 
     setState(() {
       _loading = false;
     });
 
     if (res) {
-      Utils.showToast(AppLocalizations.of(context)
+      Utils.showToast(context,AppLocalizations.of(context)
           .translate("Job card successfully cancelled"));
 
       final generalProvider =
@@ -314,7 +316,7 @@ class _JobCardScreenState extends State<JobCardScreen> {
                   Row(
                     children: [
                       item.fullEmptyContainer != null &&
-                              item.fullEmptyContainer.isNotEmpty
+                              item.fullEmptyContainer!.isNotEmpty
                           ? Image.asset(
                               item.fullEmptyContainer == "EMPTY"
                                   ? "assets/images/ic_box_empty.png"
@@ -469,7 +471,7 @@ class _JobCardScreenState extends State<JobCardScreen> {
                   ),
                   item.imageName != null
                       ? Image.file(
-                          File(item.imagePath),
+                          File(item.imagePath ?? ""),
                           width: 30,
                           height: 30,
                           fit: BoxFit.cover,
@@ -495,7 +497,7 @@ class _JobCardScreenState extends State<JobCardScreen> {
     final driver = generalProvider.driver;
 
     String createDate = _jobCard != null
-        ? Utils.convertDate(_jobCard.createDate, "dd/MM/yy kk:mm:ss")
+        ? Utils.convertDate(_jobCard!.createDate!, "dd/MM/yy kk:mm:ss")
         : "";
     return Scaffold(
       key: _scaffoldKey,
@@ -558,7 +560,7 @@ class _JobCardScreenState extends State<JobCardScreen> {
                                   ),
                                   Text(
                                       _jobCard != null
-                                          ? _jobCard.id.toString()
+                                          ? _jobCard!.id!.toString()
                                           : "",
                                       style: TextStyle(
                                           color: Colors.black,
@@ -582,7 +584,10 @@ class _JobCardScreenState extends State<JobCardScreen> {
                                   SizedBox(
                                     width: 4,
                                   ),
-                                  Text(driver != null ? driver.companyName : "",
+                                  Text(
+                                      driver != null
+                                          ? driver.companyName ?? ""
+                                          : "",
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
@@ -611,9 +616,10 @@ class _JobCardScreenState extends State<JobCardScreen> {
                                       ),
                                       Text(
                                           _jobCard != null &&
-                                                  _jobCard.allowedWeightTruck !=
+                                                  _jobCard!
+                                                          .allowedWeightTruck !=
                                                       null
-                                              ? _jobCard.allowedWeightTruck
+                                              ? _jobCard!.allowedWeightTruck
                                                   .toString()
                                               : "0",
                                           style: TextStyle(
@@ -637,8 +643,8 @@ class _JobCardScreenState extends State<JobCardScreen> {
                                       ),
                                       Text(
                                           _jobCard != null &&
-                                                  _jobCard.totalWeight != null
-                                              ? _jobCard.totalWeight.toString()
+                                                  _jobCard!.totalWeight != null
+                                              ? _jobCard!.totalWeight.toString()
                                               : "0",
                                           style: TextStyle(
                                               color: Colors.black,
@@ -653,7 +659,7 @@ class _JobCardScreenState extends State<JobCardScreen> {
                         ),
                       ),
                     ),
-                    _jobCard != null && _jobCard.containerJobsIn.length > 0
+                    _jobCard != null && _jobCard!.containerJobsIn!.length > 0
                         ? Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 8),
@@ -698,10 +704,10 @@ class _JobCardScreenState extends State<JobCardScreen> {
                                       physics: NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemCount:
-                                          _jobCard.containerJobsIn.length,
+                                          _jobCard!.containerJobsIn!.length,
                                       itemBuilder: (context, index) {
                                         PortContainer portContainer =
-                                            _jobCard.containerJobsIn[index];
+                                            _jobCard!.containerJobsIn![index];
                                         return _buildContainerItem(
                                             context, portContainer, false);
                                       })
@@ -710,7 +716,7 @@ class _JobCardScreenState extends State<JobCardScreen> {
                             ),
                           )
                         : Container(),
-                    _jobCard != null && _jobCard.containerJobsOut.length > 0
+                    _jobCard != null && _jobCard!.containerJobsOut!.length > 0
                         ? Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 8),
@@ -755,10 +761,10 @@ class _JobCardScreenState extends State<JobCardScreen> {
                                       physics: NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemCount:
-                                          _jobCard.containerJobsOut.length,
+                                          _jobCard!.containerJobsOut!.length,
                                       itemBuilder: (context, index) {
                                         PortContainer portContainer =
-                                            _jobCard.containerJobsOut[index];
+                                            _jobCard!.containerJobsOut![index];
                                         return _buildContainerItem(
                                             context, portContainer, true);
                                       })
@@ -770,7 +776,7 @@ class _JobCardScreenState extends State<JobCardScreen> {
                   ],
                 ),
               ),
-              _jobCard != null && _jobCard.approved == true
+              _jobCard != null && _jobCard!.approved == true
                   ? Container()
                   : Positioned(
                       bottom: 0,

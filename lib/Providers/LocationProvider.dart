@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 import 'GeneralProvider.dart';
 
 class LocationProvider extends ChangeNotifier {
-  Timer timer;
+  late Timer timer;
   bool _inPolygon = false;
   var context;
 
@@ -37,7 +37,7 @@ class LocationProvider extends ChangeNotifier {
         if (_isPointInPolygon(latLng, areaPort)) {
           if (!_inPolygon) {
             _inPolygon = true;
-            Utils.showToast(AppLocalizations.of(context)
+            Utils.showToast(context,AppLocalizations.of(context)
                 .translate("You found in the port area"));
           }
 
@@ -45,7 +45,7 @@ class LocationProvider extends ChangeNotifier {
         } else {
           f(_inPolygon) {
             _inPolygon = false;
-            Utils.showToast(AppLocalizations.of(context)
+            Utils.showToast(context,AppLocalizations.of(context)
                 .translate("You left the port area"));
           }
         }

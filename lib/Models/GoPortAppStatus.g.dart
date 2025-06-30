@@ -6,20 +6,19 @@ part of 'GoPortAppStatus.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-GoPortAppStatus _$GoPortAppStatusFromJson(Map<String, dynamic> json) {
-  return GoPortAppStatus(
-    id: json['id'] as int,
-    driverTZ: json['driverTZ'] as String,
-    guidID: json['guidID'] as String,
-    truckNum: json['truckNum'] as String,
-    trailerNum: json['trailerNum'] as String,
-    appInForeground: json['appInForeground'] as bool,
-    driverAccepted: json['driverAccepted'] as bool,
-    timeStamp: json['timeStamp'] == null
-        ? null
-        : DateTime.parse(json['timeStamp'] as String),
-  );
-}
+GoPortAppStatus _$GoPortAppStatusFromJson(Map<String, dynamic> json) =>
+    GoPortAppStatus(
+      id: (json['id'] as num).toInt(),
+      driverTZ: json['driverTZ'] as String?,
+      guidID: json['guidID'] as String?,
+      truckNum: json['truckNum'] as String?,
+      trailerNum: json['trailerNum'] as String?,
+      appInForeground: json['appInForeground'] as bool?,
+      driverAccepted: json['driverAccepted'] as bool?,
+      timeStamp: json['timeStamp'] == null
+          ? null
+          : DateTime.parse(json['timeStamp'] as String),
+    );
 
 Map<String, dynamic> _$GoPortAppStatusToJson(GoPortAppStatus instance) =>
     <String, dynamic>{

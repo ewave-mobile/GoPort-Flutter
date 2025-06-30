@@ -4,25 +4,25 @@ part 'Chassis.g.dart';
 @JsonSerializable()
 class Chassis {
   int id;
-  String importer;
-  String chassisID;
-  String manufacturer;
-  String model;
-  String location;
-  double lat;
-  double lng;
-  int chassisStatusID;
-  bool hasDamageReported;
-  String destination;
-  String shipmentID;
-  String guidID;
-  DateTime createDate;
-  DateTime lastUpdate;
-  DateTime reportDate;
-  bool isLoaded;
+  String? importer;
+  String? chassisID;
+  String? manufacturer;
+  String? model;
+  String? location;
+  double? lat;
+  double? lng;
+  int? chassisStatusID;
+  bool? hasDamageReported;
+  String? destination;
+  String? shipmentID;
+  String? guidID;
+  DateTime? createDate;
+  DateTime? lastUpdate;
+  DateTime? reportDate;
+  bool? isLoaded;
 
   Chassis(
-  {this.id,
+      {required this.id,
       this.importer,
       this.chassisID,
       this.manufacturer,
@@ -40,7 +40,7 @@ class Chassis {
       this.reportDate,
       this.isLoaded});
 
-  factory Chassis.fromJson(Map<String, dynamic> json) => _$ChassisFromJson(json);
+  factory Chassis.fromJson(Map<String, dynamic> json) =>
+      _$ChassisFromJson(json);
   Map<String, dynamic> toJson() => _$ChassisToJson(this);
-
 }

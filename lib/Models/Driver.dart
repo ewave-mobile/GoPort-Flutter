@@ -1,22 +1,23 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'Driver.g.dart';
+
 @JsonSerializable()
 class Driver {
-  int id;
-  String tz;
-  String firstName;
-  String idNumber;
-  String lastName;
-  bool autoLaneAuthorization;
-  String phoneNumber; //mobileNumber
-  int populationType;
-  String companyName;
-  int companyNumber;
-  int blockType;
-  String blockReason;
+  int? id;
+  String? tz;
+  String? firstName;
+  String? idNumber;
+  String? lastName;
+  bool? autoLaneAuthorization = false;
+  String? phoneNumber; //mobileNumber
+  int? populationType;
+  String? companyName;
+  int? companyNumber;
+  int? blockType;
+  String? blockReason;
 
   Driver(
-  {this.id,
+      {this.id,
       this.tz,
       this.firstName,
       this.idNumber,
