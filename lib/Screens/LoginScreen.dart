@@ -18,7 +18,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:pushy_flutter/pushy_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:unique_identifier/unique_identifier.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:upgrader/upgrader.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -118,7 +118,29 @@ class _LoginScreenState extends State<LoginScreen> {
       print('Device token error: $error');
     }
   }
+// Add this helper method to get device ID
+  Future<String> _getDeviceId() async {
+    String? identifier;
+    try {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        identifier = androidInfo.id; // Android ID
+      } else if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        identifier = iosInfo.identifierForVendor;
+      }
+
+      identifier ??= 'unknown_device';
+
+    } catch (e) {
+      print('Failed to get device identifier: $e');
+      identifier = 'unknown_device';
+    }
+
+    return identifier;
+  }
   Future<int> sendCode() async {
     setState(() {
       _loading = true;
@@ -126,13 +148,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
     FocusScope.of(context).unfocus();
     final generalProvider =
-        Provider.of<GeneralProvider>(context, listen: false);
-    final clientToken = await UniqueIdentifier.serial;
+    Provider.of<GeneralProvider>(context, listen: false);
+    final clientToken = await _getDeviceId(); // Updated this line
     final res = await GoPortApi.instance.getVerifyCode(
         generalProvider.serialNumber ?? "",
         _tzController.text,
         _deviceToken!,
-        clientToken ?? "");
+        clientToken);
 
     setState(() {
       _loading = false;
@@ -148,20 +170,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
     FocusScope.of(context).unfocus();
     final generalProvider =
-        Provider.of<GeneralProvider>(context, listen: false);
-    final clientToken = await UniqueIdentifier.serial;
+    Provider.of<GeneralProvider>(context, listen: false);
+    final clientToken = await _getDeviceId(); // Updated this line
 
     if (screenMode == ScreenMode.Login || sendCode) {
       final res = await GoPortApi.instance.getVerifyCode(
           generalProvider.serialNumber ?? "",
           _tzController.text,
           _deviceToken ?? "",
-          clientToken ?? "");
-      // final res = await GoPortApi.instance.checkDriver(
-      //     generalProvider.serialNumber,
-      //     _tzController.text,
-      //     _deviceToken,
-      //     clientToken);
+          clientToken);
 
       setState(() {
         _loading = false;
@@ -170,20 +187,20 @@ class _LoginScreenState extends State<LoginScreen> {
       if (res == 0) {
         //OK
         GoPortApi.instance.token = Utils.convertToBase64String(
-            _tzController.text + ":" + clientToken!);
+            _tzController.text + ":" + clientToken);
         setState(() {
           screenMode = ScreenMode.Otp;
         });
-        Utils.showToast(AppLocalizations.of(context)
+        Utils.showToast(context, AppLocalizations.of(context)
             .translate("We've sent an SMS code your phone number"));
       } else if (res == 1) {
-        Utils.showToast(
+        Utils.showToast(context,
             AppLocalizations.of(context).translate("User does not exist"));
       } else if (res == 2) {
-        Utils.showToast(
+        Utils.showToast(context,
             AppLocalizations.of(context).translate("Network problem"));
       } else if (res == 3) {
-        Utils.showToast(AppLocalizations.of(context).translate("User locked"));
+        Utils.showToast(context, AppLocalizations.of(context).translate("User locked"));
       }
     } else {
       final res = await GoPortApi.instance.getDriverByVerifyCode(
@@ -196,7 +213,7 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       if (res == null) {
-        Utils.showToast(AppLocalizations.of(context).translate("Wrong code"));
+        Utils.showToast(context, AppLocalizations.of(context).translate("Wrong code"));
       } else {
         generalProvider.driver = res;
         if (generalProvider.driver!.blockType! > 0) {

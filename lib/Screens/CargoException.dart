@@ -125,11 +125,11 @@ class _CargoExceptionScreenState extends State<CargoExceptionScreen>
     });
 
     if (res) {
-      Utils.showToast(AppLocalizations.of(context)
+      Utils.showToast(context,AppLocalizations.of(context)
           .translate("The details were successfully submitted."));
       Navigator.pop(context, true);
     } else {
-      Utils.showToast(AppLocalizations.of(context)
+      Utils.showToast(context,AppLocalizations.of(context)
           .translate("The details failed to submit."));
     }
   }
@@ -854,7 +854,7 @@ class _CargoExceptionScreenState extends State<CargoExceptionScreen>
                                         error = true;
                                       }
                                     } else {
-                                      Utils.showToast(
+                                      Utils.showToast(context,
                                           AppLocalizations.of(context)
                                               .translate(
                                                   "Delay reason is missing"));
@@ -994,7 +994,7 @@ class _CargoExceptionScreenState extends State<CargoExceptionScreen>
                                 onTap: () {
                                   setState(() {
                                     if (_signatureData == null) {
-                                      Utils.showToast(AppLocalizations.of(
+                                      Utils.showToast(context,AppLocalizations.of(
                                               context)
                                           .translate("Signature is mandatory"));
                                     } else {

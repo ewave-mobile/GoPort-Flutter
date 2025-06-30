@@ -124,7 +124,7 @@ class _CheckOutInputChassisScreenState extends State<CheckOutInputChassisScreen>
                 });
 
                 _setQtyText();
-                Utils.showToast(AppLocalizations.of(context)
+                Utils.showToast(context,AppLocalizations.of(context)
                     .translate("Shilda not available"));
               }
             },
@@ -351,7 +351,7 @@ class _CheckOutInputChassisScreenState extends State<CheckOutInputChassisScreen>
         _setQtyText();
       });
     } else {
-      Utils.showToast(
+      Utils.showToast(context,
           AppLocalizations.of(context).translate("Shilda not available"));
     }
   }

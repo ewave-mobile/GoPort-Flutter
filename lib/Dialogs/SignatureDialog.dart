@@ -81,7 +81,7 @@ class _SignatureDialogState extends State<SignatureDialog> {
                           widget.onConfirm(data);
                         }
                       } else {
-                        Utils.showToast(AppLocalizations.of(context)
+                        Utils.showToast(context,AppLocalizations.of(context)
                             .translate("Signature is missing"));
                       }
                     },

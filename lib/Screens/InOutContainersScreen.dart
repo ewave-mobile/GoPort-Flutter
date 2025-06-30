@@ -106,7 +106,7 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
 
     //TODO: remove
     if (driver!.autoLaneAuthorization! && _selectedInContainers.length > 0) {
-      Utils.showToast(AppLocalizations.of(context).translate(
+      Utils.showToast(context,AppLocalizations.of(context).translate(
           "You are approved for green path, please enter seal number and picture"));
 
       Future.delayed(Duration(milliseconds: 1000), () {

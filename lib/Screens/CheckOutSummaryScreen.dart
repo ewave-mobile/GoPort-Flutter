@@ -86,7 +86,7 @@ class _CheckOutSummaryScreenState extends State<CheckOutSummaryScreen>
       _loading = false;
     });
 
-    Utils.showToast(AppLocalizations.of(context)
+    Utils.showToast(context,AppLocalizations.of(context)
         .translate(res ? "SMS was successfully sent" : "Failed to send SMS"));
   }
 
@@ -302,7 +302,7 @@ class _CheckOutSummaryScreenState extends State<CheckOutSummaryScreen>
         _chassis.remove(currentChassis);
       });
     } else {
-      Utils.showToast(
+      Utils.showToast(context,
           AppLocalizations.of(context).translate("Shilda not available"));
     }
   }

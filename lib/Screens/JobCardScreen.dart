@@ -216,7 +216,7 @@ class _JobCardScreenState extends State<JobCardScreen> {
         setState(() {});
       }
     } else {
-      Utils.showToast(
+      Utils.showToast(context,
           AppLocalizations.of(context).translate("Error setting status"));
     }
   }
@@ -281,7 +281,7 @@ class _JobCardScreenState extends State<JobCardScreen> {
     });
 
     if (res) {
-      Utils.showToast(AppLocalizations.of(context)
+      Utils.showToast(context,AppLocalizations.of(context)
           .translate("Job card successfully cancelled"));
 
       final generalProvider =

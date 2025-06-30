@@ -285,7 +285,7 @@ class _AddChassisNumDialogState extends State<AddChassisNumDialog> {
                   InkWell(
                     onTap: () {
                       if (_chosenChassis == null) {
-                        Utils.showToast(AppLocalizations.of(context)
+                        Utils.showToast(context,AppLocalizations.of(context)
                             .translate("Shilda number is mandatory"));
                       } else {
                         widget.onConfirm(_chosenChassis!);

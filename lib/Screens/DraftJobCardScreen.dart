@@ -195,7 +195,7 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
     res = res != null ? res.replaceAll("\"", "") : "";
 
     if (res == "ok") {
-      Utils.showToast(AppLocalizations.of(context).translate("Draft is ready"));
+      Utils.showToast(context,AppLocalizations.of(context).translate("Draft is ready"));
       final generalProvider =
           Provider.of<GeneralProvider>(context, listen: false);
       generalProvider.selectedInContainers = [];
@@ -211,9 +211,9 @@ class _DraftJobCardScreenState extends State<DraftJobCardScreen>
           },
           okButton: AppLocalizations.of(context).translate("Confirm"));
     } else if (res == "serviceError") {
-      Utils.showToast(AppLocalizations.of(context).translate("Service error"));
+      Utils.showToast(context,AppLocalizations.of(context).translate("Service error"));
     } else {
-      Utils.showToast(res);
+      Utils.showToast(context,res);
     }
   }
 

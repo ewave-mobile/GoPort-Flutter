@@ -12,8 +12,8 @@ import 'package:goport/Helpers/AppLocalizations.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 // import 'package:smart_select/smart_select.dart';
-import 'package:unique_identifier/unique_identifier.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:toastification/toastification.dart';
 import 'package:choice/selection.dart';
 
 class Utils {
@@ -25,27 +25,48 @@ class Utils {
   static Future<String> initUDID() async {
     String? identifier;
     try {
-      identifier = await UniqueIdentifier.serial;
-    } on PlatformException {
-      identifier = '';
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        // Use Android ID as the unique identifier
+        identifier = androidInfo.id; // This is the Android ID
+
+        // Alternative: Create a custom identifier from device properties
+        // identifier = '${androidInfo.brand}_${androidInfo.model}_${androidInfo.id}';
+      } else if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        // Use identifierForVendor as the unique identifier
+        identifier = iosInfo.identifierForVendor;
+      }
+
+      // Fallback if identifier is null
+      identifier ??= 'unknown_device';
+
+    } catch (e) {
+      print('Failed to get device identifier: $e');
+      identifier = 'unknown_device';
     }
-    return identifier ?? "";
+
+    return identifier;
   }
 
   static showGeneralErrorToast(BuildContext context) {
-    Utils.showToast(
+    Utils.showToast(context,
         AppLocalizations.of(context).translate("Unknown error occurred"));
   }
 
-  static showToast(String text) {
-    Fluttertoast.showToast(
-        msg: text,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 5,
-        backgroundColor: Colors.black,
-        textColor: Colors.white,
-        fontSize: 16.0);
+  static showToast(BuildContext context, String text) {
+    toastification.show(
+      context: context,
+      title: Text(text),
+      autoCloseDuration: const Duration(seconds: 2), // equivalent to LENGTH_SHORT
+      alignment: Alignment.bottomCenter, // equivalent to ToastGravity.BOTTOM
+      style: ToastificationStyle.fillColored,
+      backgroundColor: Colors.black,
+      foregroundColor: Colors.white,
+      showProgressBar: false,
+    );
   }
 
   static showAlertDialog(

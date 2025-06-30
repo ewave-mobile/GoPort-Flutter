@@ -172,7 +172,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         prefs.setBool(Const.prefsWaitingJobCard, false);
       }
       if (prefs.getString(Const.prefsLogOn) == "1") {
-        Utils.showToast(message);
+        Utils.showToast(context,message);
         //_showMessageIncoming(guidID, driverTZ, messageTypeId);
         if (messageTypeId ==
             PushyMessageTypeEnum.SendJobCard.index.toString()) {
