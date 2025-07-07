@@ -154,9 +154,9 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
     });
 
     if (truck != null && trailer != null) {
-      _getVehicleDetails(truck.num, trailer.num);
+      _getVehicleDetails(truck.num ?? "", trailer.num ?? "");
     } else if (truck != null) {
-      _getVehicleDetails(truck.num, "");
+      _getVehicleDetails(truck.num ?? "", "");
     }
 
     EventResponse? res = await GoPortApi.instance.getEvents();
@@ -185,8 +185,8 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
     });
 
     if (res != null) {
-      if (res.isBlock) {
-        Utils.showAlertDialog(context: context, title: res.blockReason);
+      if (res.isBlock ?? false) {
+        Utils.showAlertDialog(context: context, title: res.blockReason ?? "");
         setTruckError();
       } else {
         generalProvider.setTruck(res.truck);
@@ -302,7 +302,7 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
       final generalProvider =
           Provider.of<GeneralProvider>(context, listen: false);
       final truck = generalProvider.truck;
-      if (truck != null && truck.isByPass) {
+      if (truck != null && (truck.isByPass ?? false)) {
         Utils.showAlertDialog(
             context: context,
             message: AppLocalizations.of(context)
@@ -705,7 +705,7 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
                               ],
                             ),
                             visible: generalProvider.truck != null &&
-                                generalProvider.truck!.isByPass)
+                                (generalProvider.truck!.isByPass ?? false))
                       ],
                     )
                   ],

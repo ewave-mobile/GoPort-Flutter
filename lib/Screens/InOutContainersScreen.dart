@@ -60,8 +60,8 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
       _loading = true;
     });
 
-    AvailableJobs? res =
-        await GoPortApi.instance.getAvailableJobs(driver!.tz ?? "", truck!.num);
+    AvailableJobs? res = await GoPortApi.instance
+        .getAvailableJobs(driver!.tz ?? "", truck!.num ?? "");
 
     setState(() {
       _loading = false;

@@ -4,24 +4,24 @@ part 'WeightCard.g.dart';
 @JsonSerializable()
 class WeightCard {
   int id;
-  String guidID;
-  double grossWeightTruck;
-  double grossWeightTrailer;
-  double grossWeightTotal;
-  double calculatedWeightTruck;
-  double calculatedWeightTrailer;
-  double calculatedWeightTotal;
-  bool isOverweightTruck;
-  bool isOverweightTrailer;
-  bool isOverweightTotal;
-  double allowedWeightTruck;
-  double allowedWeightTrailer;
-  double totalAllowedWeight;
-  double manualGrossWeightTruck;
-  double manualGrossWeightTrailer;
-  double manualGrossWeightTotal;
-  DateTime weightTime;
-  DateTime createDate;
+  String? guidID;
+  double? grossWeightTruck;
+  double? grossWeightTrailer;
+  double? grossWeightTotal;
+  double? calculatedWeightTruck;
+  double? calculatedWeightTrailer;
+  double? calculatedWeightTotal;
+  bool? isOverweightTruck;
+  bool? isOverweightTrailer;
+  bool? isOverweightTotal;
+  double? allowedWeightTruck;
+  double? allowedWeightTrailer;
+  double? totalAllowedWeight;
+  double? manualGrossWeightTruck;
+  double? manualGrossWeightTrailer;
+  double? manualGrossWeightTotal;
+  DateTime? weightTime;
+  DateTime? createDate;
 
   WeightCard(
       this.id,
@@ -44,7 +44,7 @@ class WeightCard {
       this.weightTime,
       this.createDate);
 
-  factory WeightCard.fromJson(Map<String, dynamic> json) => _$WeightCardFromJson(json);
+  factory WeightCard.fromJson(Map<String, dynamic> json) =>
+      _$WeightCardFromJson(json);
   Map<String, dynamic> toJson() => _$WeightCardToJson(this);
-
 }

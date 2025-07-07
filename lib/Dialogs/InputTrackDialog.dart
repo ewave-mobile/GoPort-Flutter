@@ -45,11 +45,11 @@ class _InputTrackDialogState extends State<InputTrackDialog> {
     }
 
     if (truck != null) {
-      _trackNumberController.text = truck.num;
+      _trackNumberController.text = truck.num ?? "";
     }
 
     if (trailer != null) {
-      _trailerController.text = trailer.num;
+      _trailerController.text = trailer.num ?? "";
     }
   }
 

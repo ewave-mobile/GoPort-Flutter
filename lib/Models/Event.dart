@@ -4,8 +4,8 @@ part 'Event.g.dart';
 @JsonSerializable()
 class Event {
   int iruaCode; //eventID
-  String sugIruaName; //eventType
-  String iruaTeur; //eventDesc
+  String? sugIruaName; //eventType
+  String? iruaTeur; //eventDesc
   DateTime? iruaPtichaDate; //startDate
   DateTime? iruaSgiraDate;
 
