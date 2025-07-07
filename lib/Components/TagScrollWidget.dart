@@ -66,7 +66,7 @@ class _EventScrollWidgetState extends State<EventScrollWidget> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            event.iruaTeur,
+            event.iruaTeur ?? "",
             maxLines: 1,
             textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,

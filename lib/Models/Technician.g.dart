@@ -8,10 +8,10 @@ part of 'Technician.dart';
 
 Technician _$TechnicianFromJson(Map<String, dynamic> json) => Technician(
       (json['id'] as num).toInt(),
-      json['containerTypeID'] as String,
-      json['technicianName'] as String,
-      json['phoneNumber'] as String,
-      json['address'] as String,
+      json['containerTypeID'] as String?,
+      json['technicianName'] as String?,
+      json['phoneNumber'] as String?,
+      json['address'] as String?,
     );
 
 Map<String, dynamic> _$TechnicianToJson(Technician instance) =>

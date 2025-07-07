@@ -8,24 +8,28 @@ part of 'WeightCard.dart';
 
 WeightCard _$WeightCardFromJson(Map<String, dynamic> json) => WeightCard(
       (json['id'] as num).toInt(),
-      json['guidID'] as String,
-      (json['grossWeightTruck'] as num).toDouble(),
-      (json['grossWeightTrailer'] as num).toDouble(),
-      (json['grossWeightTotal'] as num).toDouble(),
-      (json['calculatedWeightTruck'] as num).toDouble(),
-      (json['calculatedWeightTrailer'] as num).toDouble(),
-      (json['calculatedWeightTotal'] as num).toDouble(),
-      json['isOverweightTruck'] as bool,
-      json['isOverweightTrailer'] as bool,
-      json['isOverweightTotal'] as bool,
-      (json['allowedWeightTruck'] as num).toDouble(),
-      (json['allowedWeightTrailer'] as num).toDouble(),
-      (json['totalAllowedWeight'] as num).toDouble(),
-      (json['manualGrossWeightTruck'] as num).toDouble(),
-      (json['manualGrossWeightTrailer'] as num).toDouble(),
-      (json['manualGrossWeightTotal'] as num).toDouble(),
-      DateTime.parse(json['weightTime'] as String),
-      DateTime.parse(json['createDate'] as String),
+      json['guidID'] as String?,
+      (json['grossWeightTruck'] as num?)?.toDouble(),
+      (json['grossWeightTrailer'] as num?)?.toDouble(),
+      (json['grossWeightTotal'] as num?)?.toDouble(),
+      (json['calculatedWeightTruck'] as num?)?.toDouble(),
+      (json['calculatedWeightTrailer'] as num?)?.toDouble(),
+      (json['calculatedWeightTotal'] as num?)?.toDouble(),
+      json['isOverweightTruck'] as bool?,
+      json['isOverweightTrailer'] as bool?,
+      json['isOverweightTotal'] as bool?,
+      (json['allowedWeightTruck'] as num?)?.toDouble(),
+      (json['allowedWeightTrailer'] as num?)?.toDouble(),
+      (json['totalAllowedWeight'] as num?)?.toDouble(),
+      (json['manualGrossWeightTruck'] as num?)?.toDouble(),
+      (json['manualGrossWeightTrailer'] as num?)?.toDouble(),
+      (json['manualGrossWeightTotal'] as num?)?.toDouble(),
+      json['weightTime'] == null
+          ? null
+          : DateTime.parse(json['weightTime'] as String),
+      json['createDate'] == null
+          ? null
+          : DateTime.parse(json['createDate'] as String),
     );
 
 Map<String, dynamic> _$WeightCardToJson(WeightCard instance) =>
@@ -47,6 +51,6 @@ Map<String, dynamic> _$WeightCardToJson(WeightCard instance) =>
       'manualGrossWeightTruck': instance.manualGrossWeightTruck,
       'manualGrossWeightTrailer': instance.manualGrossWeightTrailer,
       'manualGrossWeightTotal': instance.manualGrossWeightTotal,
-      'weightTime': instance.weightTime.toIso8601String(),
-      'createDate': instance.createDate.toIso8601String(),
+      'weightTime': instance.weightTime?.toIso8601String(),
+      'createDate': instance.createDate?.toIso8601String(),
     };

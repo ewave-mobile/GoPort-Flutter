@@ -10,8 +10,8 @@ VehicleDetails _$VehicleDetailsFromJson(Map<String, dynamic> json) =>
     VehicleDetails(
       Truck.fromJson(json['truck'] as Map<String, dynamic>),
       Truck.fromJson(json['trailer'] as Map<String, dynamic>),
-      json['blockReason'] as String,
-      json['isBlock'] as bool,
+      json['blockReason'] as String?,
+      json['isBlock'] as bool?,
     );
 
 Map<String, dynamic> _$VehicleDetailsToJson(VehicleDetails instance) =>
