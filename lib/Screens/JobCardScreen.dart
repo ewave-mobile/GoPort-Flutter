@@ -151,10 +151,12 @@ class _JobCardScreenState extends State<JobCardScreen> {
     // setState(() {
     //   _guidID = "afe05385-c211-4952-b47a-fa9036cd388b23082021";
     // });
-    Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
-    if (arguments.containsKey("guidID")) {
+    //Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? guidID = prefs.getString('guidID');
+    if (guidID !=null) {
       setState(() {
-        _guidID = arguments["guidID"];
+        _guidID = guidID;
       });
     }
     _loadJobCardData();

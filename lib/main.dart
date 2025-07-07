@@ -149,9 +149,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     }
     if (data.containsKey("guidID")) {
       guidID = data["guidID"];
+
     } else {
       guidID = "";
     }
+    prefs.setString('guidID',  guidID);
     if (data.containsKey("message")) {
       message = data["message"];
     } else {
@@ -172,11 +174,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         prefs.setBool(Const.prefsWaitingJobCard, false);
       }
       if (prefs.getString(Const.prefsLogOn) == "1") {
-        Utils.showToast(context,message);
+        ScaffoldMessenger.of(_navigatorKey.currentContext!).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+        // Utils.showToast(_navigatorKey.currentContext!,message);
         //_showMessageIncoming(guidID, driverTZ, messageTypeId);
         if (messageTypeId ==
             PushyMessageTypeEnum.SendJobCard.index.toString()) {
-          Navigator.of(appState.context).pushNamed("JobCardScreen");
+          _navigatorKey.currentState?.pushNamed("JobCardScreen");
         }
       } else {
         //TODO: show in-app notification
@@ -206,6 +211,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           break;
       }
 
+
       Function onOk = () async {
         final SharedPreferences prefs = await _prefs;
         prefs.setString(Const.prefsLogOn, "0");
@@ -223,12 +229,37 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           message: message ?? "",
           onOk: onOk);
     }
-
+    /*else if (messageTypeId ==    PushyMessageTypeEnum.NotAcceptedApp.index.toString()){
+      ScaffoldMessenger.of(_navigatorKey.currentContext!).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    }
+    else if (  messageTypeId ==  PushyMessageTypeEnum.GateStatusSendSupport.index.toString()){
+      ScaffoldMessenger.of(_navigatorKey.currentContext!).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    }
+    else if (  messageTypeId ==  PushyMessageTypeEnum.WaitingJobCard.index.toString()) {
+      ScaffoldMessenger.of(_navigatorKey.currentContext!).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    }*/
     Pushy.clearBadge();
   }
 
   _showMessageIncoming(String guidID, String driverTZ, int messageType) {
-    Map data = {
+    String message="";
+
+    switch(messageType){
+
+    }
+
+    if(message!=null&&message!="") {
+      ScaffoldMessenger.of(_navigatorKey.currentContext!).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    }
+  /*  Map data = {
       "guidID": guidID,
       "driverTZ": driverTZ,
       "pushyMessageType": messageType
@@ -236,7 +267,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     FBroadcast.instance().broadcast(
       Const.eventIncomingMessage,
       value: data,
-    );
+    );*/
   }
 
   _onShowLanguage() async {

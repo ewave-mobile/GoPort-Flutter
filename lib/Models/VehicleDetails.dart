@@ -3,8 +3,8 @@ import 'package:json_annotation/json_annotation.dart';
 part 'VehicleDetails.g.dart';
 @JsonSerializable()
 class VehicleDetails {
-  Truck truck;
-  Truck trailer;
+  Truck? truck;
+  Truck? trailer;
   String blockReason;
   bool isBlock;
 

@@ -3,7 +3,7 @@ part 'PortContainer.g.dart';
 
 @JsonSerializable()
 class PortContainer {
-  int id;
+  int? id;
   String? actualCntrNo;
   String? containerType;
   double? weight;
@@ -32,7 +32,7 @@ class PortContainer {
   String? cargoType;
 
   PortContainer(
-      {required this.id,
+      {  this.id,
       this.actualCntrNo,
       this.containerType,
       this.weight,

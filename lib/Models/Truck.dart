@@ -5,9 +5,9 @@ class Truck {
   String num;
   String licenseNumber;
   int vehicleType;
-  String vehicleType_N;
+  String? vehicleType_N;
   int blockType;
-  String blocktype_n; //blockReason
+  String? blocktype_n; //blockReason
   int companyNumber;
   bool isByPass;
 

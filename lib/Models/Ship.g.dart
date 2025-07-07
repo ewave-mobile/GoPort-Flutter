@@ -16,7 +16,7 @@ Ship _$ShipFromJson(Map<String, dynamic> json) => Ship(
       json['x_GPS'] as String,
       json['y_GPS'] as String,
       json['zakef'] as String,
-      json['selected'] as bool,
+      json['selected'] as bool?,
     );
 
 Map<String, dynamic> _$ShipToJson(Ship instance) => <String, dynamic>{
