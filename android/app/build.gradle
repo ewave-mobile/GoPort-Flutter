@@ -36,7 +36,7 @@ android {
         jvmTarget = '17'  // Add this to match Java target
     }
     defaultConfig {
-        applicationId "com.ewavemobile.goport"
+        applicationId "ewavemobile.com.goportNew"
         minSdkVersion 21
         targetSdkVersion 35
         versionCode flutterVersionCode.toInteger()

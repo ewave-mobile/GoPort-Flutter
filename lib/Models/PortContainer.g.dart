@@ -8,7 +8,7 @@ part of 'PortContainer.dart';
 
 PortContainer _$PortContainerFromJson(Map<String, dynamic> json) =>
     PortContainer(
-      id: (json['id'] as num).toInt(),
+      id: (json['id'] as num?)?.toInt(),
       actualCntrNo: json['actualCntrNo'] as String?,
       containerType: json['containerType'] as String?,
       weight: (json['weight'] as num?)?.toDouble(),

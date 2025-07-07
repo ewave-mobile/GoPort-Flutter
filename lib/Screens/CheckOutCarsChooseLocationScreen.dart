@@ -81,6 +81,22 @@ class _CheckOutCarsChooseLocationScreenState
         _importers = res;
       });
     }
+
+    Future.delayed(Duration(milliseconds: 300), () async {
+      String? selected = await Utils.showSingleChoiceDialog(
+        context: context,
+        title: AppLocalizations.of(context).translate("Choose importer"),
+        options: _importers,
+        selected: _currentImporter ?? "",
+      );
+
+      if (selected != null) {
+        setState(() {
+          _currentImporter = selected;
+        });
+        _loadChassis();
+      }
+    });
   }
 
   _onPrev() {
@@ -302,7 +318,7 @@ class _CheckOutCarsChooseLocationScreenState
                     SizedBox(
                       height: 10,
                     ),
-                    Container(
+                   /* Container(
                         child: Center(
                       child: Utils.showSingleChoiceDialog(
                           context: context,
@@ -316,7 +332,7 @@ class _CheckOutCarsChooseLocationScreenState
                               _loadChassis();
                             });
                           }),
-                    )),
+                    )),*/
                     Container(height: 1, color: colorDivider),
                     SizedBox(
                       height: 10,

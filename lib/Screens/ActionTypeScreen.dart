@@ -113,7 +113,7 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
     String guidID = await GoPortApi.instance
             .getJobCardGuidIDByDriver(generalProvider.driver?.tz ?? "") ??
         "";
-    if (guidID != null && guidID != "null") {
+    if (guidID != null && guidID != "null"&&guidID!="") {
       guidID = guidID.replaceAll("\"", "");
       generalProvider.setShowBackButton(true);
       WidgetsBinding.instance.removeObserver(this);
@@ -547,7 +547,7 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
                                     width:
                                         MediaQuery.of(context).size.width / 2 -
                                             40,
-                                    child: Column(
+                                    child:SingleChildScrollView(child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.end,
                                       children: [
@@ -581,7 +581,7 @@ class _ActionTypeScreenState extends State<ActionTypeScreen>
                                           ),
                                         ),
                                       ],
-                                    ),
+                                    )),
                                   ),
                                 ),
                               ),

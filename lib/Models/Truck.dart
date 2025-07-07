@@ -12,6 +12,7 @@ class Truck {
   int? companyNumber;
   bool? isByPass;
 
+
   Truck(this.num, this.licenseNumber, this.vehicleType, this.vehicleType_N,
       this.blockType, this.blocktype_n, this.companyNumber, this.isByPass);
 

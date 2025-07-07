@@ -160,14 +160,17 @@ class _AutoLaneScreenState extends State<AutoLaneScreen> {
     final ImagePicker _picker = ImagePicker();
     final XFile? photo =
         await _picker.pickImage(source: ImageSource.camera, imageQuality: 10);
-    portContainer.imagePath = photo?.path ?? "";
 
-    DateFormat dateFormat = DateFormat("yyyyMMddHHmmss");
-    String createDate = dateFormat.format(DateTime.now());
-    portContainer.imageName =
-        portContainer.actualCntrNo! + "_" + createDate + ".jpg";
 
-    setState(() {});
+    setState(() {
+      portContainer.imagePath = photo?.path ?? "";
+
+      DateFormat dateFormat = DateFormat("yyyyMMddHHmmss");
+      String createDate = dateFormat.format(DateTime.now());
+      portContainer.imageName =
+          portContainer.actualCntrNo! + "_" + createDate + ".jpg";
+
+    });
   }
 
   _onPrev() {

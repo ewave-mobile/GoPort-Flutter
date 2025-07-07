@@ -5,7 +5,10 @@ part 'AvailableJobs.g.dart';
 
 @JsonSerializable()
 class AvailableJobs {
+  @JsonKey(defaultValue: [] )
   List<PortContainer> containerJobsIn = [];
+
+  @JsonKey(defaultValue: [] )
   List<PortContainer> containerJobsOut = [];
 
   AvailableJobs(

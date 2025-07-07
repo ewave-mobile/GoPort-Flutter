@@ -4,10 +4,11 @@ part 'VehicleDetails.g.dart';
 
 @JsonSerializable()
 class VehicleDetails {
-  Truck truck;
-  Truck trailer;
   String? blockReason;
   bool? isBlock;
+  Truck? truck;
+  Truck? trailer;
+
 
   VehicleDetails(this.truck, this.trailer, this.blockReason, this.isBlock);
 

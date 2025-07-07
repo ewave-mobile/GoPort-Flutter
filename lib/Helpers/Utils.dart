@@ -74,8 +74,7 @@ class Utils {
       String title = "",
       String? message,
       Function? onOk}) {
-    AppDialog alert =
-        AppDialog(title: title, message: message, onOK: () => onOk!());
+    AppDialog alert = onOk!=null?     AppDialog(title: title, message: message,  onOK: () => onOk()): AppDialog(title: title, message: message) ;
 
     showDialog(
       context: context,
@@ -145,7 +144,7 @@ class Utils {
   //     },
   //   );
   // }
-  static showSingleChoiceDialog({
+  /*static showSingleChoiceDialog({
     required BuildContext context,
     required String title,
     required List<String> options,
@@ -190,6 +189,57 @@ class Utils {
               onPressed: () {
                 Navigator.of(context).pop();
               },
+              child: Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }*/
+
+  static Future<String?> showSingleChoiceDialog({
+    required BuildContext context,
+    required String title,
+    required List<String> options,
+    required String selected,
+  }) {
+    return showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        String? selectedValue = selected;
+
+        return AlertDialog(
+          title: Text(title, textAlign: TextAlign.center),
+          content: Container(
+            width: double.maxFinite,
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: options.length,
+                  itemBuilder: (context, index) {
+                    final option = options[index];
+                    return RadioListTile<String>(
+                      title: Text(option),
+                      value: option,
+                      groupValue: selectedValue,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedValue = value;
+                        });
+
+                        // סגור את הדיאלוג והחזר את הבחירה
+                        Navigator.of(context).pop(value);
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(), // ביטול
               child: Text('Cancel'),
             ),
           ],

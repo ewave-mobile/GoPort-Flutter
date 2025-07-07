@@ -30,7 +30,7 @@ class UpdateSerialDialog extends StatefulWidget {
 class _UpdateSerialDialogState extends State<UpdateSerialDialog> {
   late TextEditingController _serialNumController;
   late Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  late String _currentImagePath;
+  late String _currentImagePath="";
   late PortContainer _portContainer;
 
   @override
@@ -179,7 +179,7 @@ class _UpdateSerialDialogState extends State<UpdateSerialDialog> {
                 ],
               ),
             ),
-            _currentImagePath != null
+            _currentImagePath != null&&  _currentImagePath !=""
                 ? ImageDialog(
                     imagePath: _currentImagePath,
                     onClose: () {
