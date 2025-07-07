@@ -6,7 +6,7 @@ part 'JobCardContainer.g.dart';
 @JsonSerializable()
 class JobCardContainer {
   final PortContainer container;
-  final String guidID;
+  final String? guidID;
 
   JobCardContainer({required this.container, required this.guidID});
 

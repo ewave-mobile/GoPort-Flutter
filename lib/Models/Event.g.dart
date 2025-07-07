@@ -8,8 +8,8 @@ part of 'Event.dart';
 
 Event _$EventFromJson(Map<String, dynamic> json) => Event(
       (json['iruaCode'] as num).toInt(),
-      json['sugIruaName'] as String,
-      json['iruaTeur'] as String,
+      json['sugIruaName'] as String?,
+      json['iruaTeur'] as String?,
       json['iruaPtichaDate'] == null
           ? null
           : DateTime.parse(json['iruaPtichaDate'] as String),

@@ -393,7 +393,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     // });
 
     if (res != null) {
-      if (res.isBlock) {
+      if (res.isBlock ?? false) {
         Utils.showAlertDialog(context: context, message: res.blockReason);
         //setTruckError();
       } else {

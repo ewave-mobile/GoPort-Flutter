@@ -8,14 +8,14 @@ part of 'VehicleDetails.dart';
 
 VehicleDetails _$VehicleDetailsFromJson(Map<String, dynamic> json) =>
     VehicleDetails(
+      json['blockReason'] as String?,
+      json['isBlock'] as bool?,
       json['truck'] == null
           ? null
           : Truck.fromJson(json['truck'] as Map<String, dynamic>),
       json['trailer'] == null
           ? null
           : Truck.fromJson(json['trailer'] as Map<String, dynamic>),
-      json['blockReason'] as String,
-      json['isBlock'] as bool,
     );
 
 Map<String, dynamic> _$VehicleDetailsToJson(VehicleDetails instance) =>

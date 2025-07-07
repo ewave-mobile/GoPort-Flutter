@@ -7,15 +7,15 @@ part of 'Ship.dart';
 // **************************************************************************
 
 Ship _$ShipFromJson(Map<String, dynamic> json) => Ship(
-      json['ship_NO'] as String,
-      json['shipnamE_ENG'] as String,
-      json['stat'] as String,
-      json['sochen'] as String,
-      json['razif'] as String,
-      json['lasT_UPDATE'] as String,
-      json['x_GPS'] as String,
-      json['y_GPS'] as String,
-      json['zakef'] as String,
+      json['ship_NO'] as String?,
+      json['shipnamE_ENG'] as String?,
+      json['stat'] as String?,
+      json['sochen'] as String?,
+      json['razif'] as String?,
+      json['lasT_UPDATE'] as String?,
+      json['x_GPS'] as String?,
+      json['y_GPS'] as String?,
+      json['zakef'] as String?,
       json['selected'] as bool?,
     );
 

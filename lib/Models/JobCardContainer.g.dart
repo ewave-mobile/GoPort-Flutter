@@ -10,7 +10,7 @@ JobCardContainer _$JobCardContainerFromJson(Map<String, dynamic> json) =>
     JobCardContainer(
       container:
           PortContainer.fromJson(json['container'] as Map<String, dynamic>),
-      guidID: json['guidID'] as String,
+      guidID: json['guidID'] as String?,
     );
 
 Map<String, dynamic> _$JobCardContainerToJson(JobCardContainer instance) =>

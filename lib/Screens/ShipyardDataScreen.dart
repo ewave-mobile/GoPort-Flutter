@@ -87,13 +87,13 @@ class _ShipyardDataScreenState extends State<ShipyardDataScreen>
               Row(
                 children: [
                   Text(
-                    item.shipnamE_ENG,
+                    item.shipnamE_ENG ?? "",
                     style: TextStyle(fontSize: 18, color: colorLogo2),
                   ),
                 ],
               ),
               Text(
-                item.ship_NO,
+                item.ship_NO ?? "",
                 style: TextStyle(fontSize: 18, color: colorPrimary),
               ),
             ],
@@ -104,7 +104,7 @@ class _ShipyardDataScreenState extends State<ShipyardDataScreen>
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              item.stat,
+              item.stat ?? "",
               style: TextStyle(fontSize: 18, color: colorPrimary),
             ),
           ),
@@ -124,7 +124,7 @@ class _ShipyardDataScreenState extends State<ShipyardDataScreen>
                     width: 6,
                   ),
                   Text(
-                    item.razif,
+                    item.razif ?? "",
                     style: TextStyle(fontSize: 18),
                   ),
                 ],
@@ -139,7 +139,7 @@ class _ShipyardDataScreenState extends State<ShipyardDataScreen>
                     width: 6,
                   ),
                   Text(
-                    item.zakef,
+                    item.zakef ?? "",
                     style: TextStyle(fontSize: 18),
                   ),
                 ],
