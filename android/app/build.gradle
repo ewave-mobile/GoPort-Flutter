@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.ewavemobile.goport"
-    compileSdkVersion 35
+    compileSdkVersion 36
 
     compileOptions {
         // Enable support for the new language APIs
@@ -38,7 +38,7 @@ android {
     defaultConfig {
         applicationId "ewavemobile.com.goportNew"
         minSdkVersion 21
-        targetSdkVersion 35
+        targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
