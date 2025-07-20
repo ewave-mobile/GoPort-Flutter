@@ -1,0 +1,2 @@
+C:/Develop/Flutter/GoPort-Flutter/android/app/.cxx/RelWithDebInfo/5a5s4vo1/x86/CMakeFiles/edit_cache.dir
+C:/Develop/Flutter/GoPort-Flutter/android/app/.cxx/RelWithDebInfo/5a5s4vo1/x86/CMakeFiles/rebuild_cache.dir
