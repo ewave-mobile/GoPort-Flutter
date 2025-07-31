@@ -525,11 +525,11 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
                             tabs: [
                               Tab(
                                 text:
-                                    '${AppLocalizations.of(context).translate("In Containers")} (${_availableJobs != null ? _availableJobs!.containerJobsOut.length : 0})',
+                                    '${AppLocalizations.of(context).translate("Out Containers")} (${_availableJobs != null ? _availableJobs!.containerJobsOut.length : 0})',
                               ),
                               Tab(
                                 text:
-                                    '${AppLocalizations.of(context).translate("Out Containers")} (${_availableJobs != null ? _availableJobs!.containerJobsIn.length : 0})',
+                                    '${AppLocalizations.of(context).translate("In Containers")} (${_availableJobs != null ? _availableJobs!.containerJobsIn.length : 0})',
                               )
                             ],
                             controller: _tabController,
