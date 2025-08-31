@@ -465,37 +465,22 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
   }
 
   Widget _buildInListView(BuildContext buildContext) {
-    return Column(
-      children: [
-        Container(
-          height: 1,
-          color: colorDivider,
-        ),
-        ListView.builder(
-            shrinkWrap: true,
+    return  Padding(padding: EdgeInsetsGeometry.only(bottom:56 ),child:ListView.builder(
+           // shrinkWrap: true,
             itemCount: _availableJobs!.containerJobsIn.length,
             itemBuilder: (BuildContext buildContext, int index) {
               return _buildInListItem(buildContext, index);
-            }),
-      ],
-    );
+            })) ;
   }
 
   Widget _buildOutListView(BuildContext buildContext) {
-    return Column(
-      children: [
-        Container(
-          height: 1,
-          color: colorDivider,
-        ),
-        ListView.builder(
-            shrinkWrap: true,
+
+    return Padding(padding: EdgeInsetsGeometry.only(bottom:56 ),child: ListView.builder(
+           // shrinkWrap: true,
             itemCount: _availableJobs!.containerJobsOut.length,
             itemBuilder: (BuildContext buildContext, int index) {
               return _buildOutListItem(buildContext, index);
-            }),
-      ],
-    );
+            } ) ) ;
   }
 
   @override
@@ -524,18 +509,19 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
                             labelColor: colorLogo2,
                             tabs: [
                               Tab(
-                                text:
-                                    '${AppLocalizations.of(context).translate("Out Containers")} (${_availableJobs != null ? _availableJobs!.containerJobsOut.length : 0})',
+                                text:  '${AppLocalizations.of(context).translate("Out Containers")} (${_availableJobs != null ? _availableJobs!.containerJobsOut.length : 0})',
+
                               ),
                               Tab(
-                                text:
-                                    '${AppLocalizations.of(context).translate("In Containers")} (${_availableJobs != null ? _availableJobs!.containerJobsIn.length : 0})',
+                                text: '${AppLocalizations.of(context).translate("In Containers")} (${_availableJobs != null ? _availableJobs!.containerJobsIn.length : 0})',
+
                               )
                             ],
                             controller: _tabController,
                             indicatorSize: TabBarIndicatorSize.tab,
                           ),
-                          _availableJobs != null
+                      Expanded(
+                        child:  _availableJobs != null
                               ? AnimatedBuilder(
                                   animation: _tabController!.animation!,
                                   builder: (ctx, child) {
@@ -544,7 +530,7 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
                                     } else
                                       return _buildInListView(context);
                                   })
-                              : Container(),
+                              : Container()),
                         ],
                       ),
                     ),
@@ -554,6 +540,7 @@ class _InOutContainersScreenState extends State<InOutContainersScreen>
               Positioned(
                   bottom: 0,
                   child: BottomNavView(
+
                     items: navViewItems,
                   )),
             ],

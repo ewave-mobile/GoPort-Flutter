@@ -41,6 +41,8 @@
 	</array>
 	<key>FirebaseAppDelegateProxyEnabled</key>
     <false/>
+    <key>PushyAppId</key>
+    <string>ewavemobile.com.goport</string>
 	<key>PushyUseAPNs</key>
     <true/>
 	<key>UILaunchStoryboardName</key>
