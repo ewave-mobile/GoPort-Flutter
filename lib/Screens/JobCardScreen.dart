@@ -153,7 +153,12 @@ class _JobCardScreenState extends State<JobCardScreen> {
     // });
     //Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? guidID = prefs.getString('guidID');
+    final generalProvider =
+    Provider.of<GeneralProvider>(context, listen: false);
+    String? guidID = await GoPortApi.instance
+        .getJobCardGuidIDByDriver(generalProvider.driver?.tz ?? "") ?? prefs.getString('guidID');
+
+   // String? guidID = prefs.getString('guidID');
     if (guidID !=null) {
       setState(() {
         _guidID = guidID;
