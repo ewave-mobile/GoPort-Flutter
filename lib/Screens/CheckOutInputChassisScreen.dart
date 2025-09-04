@@ -1,24 +1,16 @@
-import 'package:adaptive_dialog/adaptive_dialog.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:goport/Components/BottomNavView.dart';
 import 'package:goport/Const/AppColors.dart';
-import 'package:goport/Const/Const.dart';
 import 'package:goport/Dialogs/AddChassisNumDialog.dart';
 import 'package:goport/Helpers/AppLocalizations.dart';
 import 'package:goport/Helpers/Utils.dart';
-import 'package:goport/Helpers/Utils.dart';
-import 'package:goport/Models/AvailableJobs.dart';
 import 'package:goport/Models/BottomNavViewItem.dart';
 import 'package:goport/Models/Chassis.dart';
-import 'package:goport/Models/ImporterChassis.dart';
 import 'package:goport/Network/GoPortApi.dart';
-import 'package:goport/Providers/GeneralProvider.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckOutInputChassisScreen extends StatefulWidget {
