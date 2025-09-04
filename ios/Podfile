@@ -43,4 +43,3 @@ post_install do |installer|
   end
 end
 
-pod 'RealmSwift', '~> 10.0'

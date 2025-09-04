@@ -28,8 +28,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>In order to take picture of packages</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>We need your location to be able to show you on a map</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+       <string>We need access to your location to provide location-based services, even when the app is in the background.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need your location to be able to show you on a map</string>
 	<key>NSPhotoLibraryUsageDescription</key>
