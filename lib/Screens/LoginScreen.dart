@@ -2,16 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:goport/Const/AppColors.dart';
 import 'package:goport/Const/Const.dart';
 import 'package:goport/Helpers/AppLocalizations.dart';
 import 'package:goport/Helpers/Utils.dart';
-import 'package:goport/Models/Driver.dart';
 import 'package:goport/Network/GoPortApi.dart';
 import 'package:goport/Providers/GeneralProvider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -21,9 +17,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:upgrader/upgrader.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'dart:convert';
-import '../main.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 enum ScreenMode {
@@ -40,7 +33,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  AppcastConfiguration? _upgradeConfig;
+  //AppcastConfiguration? _upgradeConfig;
   String? _truck;
   String? _version;
   String? _deviceToken;
@@ -285,12 +278,12 @@ class _LoginScreenState extends State<LoginScreen> {
     // valid identifier already in the App Store.
 
     // On Android, setup the Appcast below.
-    final appcastURL =
+  /*  final appcastURL =
         'https://raw.githubusercontent.com/larryaasen/upgrader/master/test/testappcast.xml';
     final cfg = AppcastConfiguration(url: appcastURL, supportedOS: ['android']);
     setState(() {
       _upgradeConfig = cfg;
-    });
+    });*/
   }
 
   _onVerificationSucceeded(String serverToken) async {
@@ -379,10 +372,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final upgrader = Upgrader(
-      appcastConfig: _upgradeConfig,
-      debugLogging: true,
-    );
+   /* final upgrader = Upgrader(
+     *//* appcastConfig: _upgradeConfig,
+      debugLogging: true,*//*
+    );*/
     return WillPopScope(
       onWillPop: () async {
         if (_loading) {
@@ -410,7 +403,7 @@ class _LoginScreenState extends State<LoginScreen> {
           resizeToAvoidBottomInset: false,
           key: _scaffoldKey,
           body: UpgradeAlert(
-            upgrader: upgrader,
+          /*  upgrader: upgrader,*/
             child: Stack(
               alignment: Alignment.center,
               fit: StackFit.expand,

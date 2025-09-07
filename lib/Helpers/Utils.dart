@@ -2,19 +2,15 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:choice/choice.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:goport/Components/AppDialog.dart';
-import 'package:goport/Const/AppColors.dart';
-import 'package:goport/Const/AppColors.dart' as AppColors;
 import 'package:goport/Helpers/AppLocalizations.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-// import 'package:smart_select/smart_select.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:toastification/toastification.dart';
-import 'package:choice/selection.dart';
 
 class Utils {
   static Future<Directory?> getPicturesDirectoryPath(String ext) async {

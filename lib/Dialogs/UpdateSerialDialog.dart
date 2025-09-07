@@ -2,15 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:goport/Const/AppColors.dart';
-import 'package:goport/Const/Const.dart';
 import 'package:goport/Dialogs/ImageDialog.dart';
 import 'package:goport/Helpers/AppLocalizations.dart';
 import 'package:goport/Helpers/Utils.dart';
 import 'package:goport/Models/PortContainer.dart';
-import 'package:goport/Providers/GeneralProvider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UpdateSerialDialog extends StatefulWidget {

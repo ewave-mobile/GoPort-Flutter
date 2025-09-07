@@ -5,8 +5,6 @@ import 'package:goport/Const/AppColors.dart';
 import 'package:goport/Const/Const.dart';
 import 'package:goport/Helpers/AppLocalizations.dart';
 import 'package:goport/Models/Truck.dart';
-import 'package:goport/Providers/GeneralProvider.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InputTrackDialog extends StatefulWidget {

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:goport/Const/AppColors.dart';
 
 class SplashScreen extends StatefulWidget {

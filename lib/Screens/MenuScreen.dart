@@ -1,23 +1,16 @@
-import 'dart:io';
+
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:goport/Components/BottomNavView.dart';
 import 'package:goport/Const/AppColors.dart';
 import 'package:goport/Const/Const.dart';
-import 'package:goport/Dialogs/UpdateSerialDialog.dart';
 import 'package:goport/Enums/GateAppStatusEnum.dart';
 import 'package:goport/Helpers/AppLocalizations.dart';
 import 'package:goport/Helpers/RootDrawer.dart';
 import 'package:goport/Helpers/Utils.dart';
 import 'package:goport/Models/BottomNavViewItem.dart';
-import 'package:goport/Models/JobCard.dart';
-import 'package:goport/Models/JobCardContainer.dart';
-import 'package:goport/Models/PortContainer.dart';
 import 'package:goport/Network/GoPortApi.dart';
 import 'package:goport/Providers/GeneralProvider.dart';
-import 'package:goport/main.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -1,4 +1,4 @@
-import 'package:goport/Models/PortContainer.dart';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'ChargeException.g.dart';

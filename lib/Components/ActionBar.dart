@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:goport/Const/AppColors.dart';
 import 'package:goport/Const/Const.dart';
-import 'package:goport/Enums/GateAppStatusEnum.dart';
 import 'package:goport/Helpers/AppLocalizations.dart';
-import 'package:goport/Helpers/Utils.dart';
 import 'package:goport/Network/GoPortApi.dart';
 import 'package:goport/Providers/GeneralProvider.dart';
 import 'package:provider/provider.dart';

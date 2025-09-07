@@ -18,10 +18,10 @@ class LocationProvider extends ChangeNotifier {
   var context;
 
   List<LatLng> areaPort = [
-    LatLng(31.82873, 34.65899),
-    LatLng(31.81521, 34.64238),
-    LatLng(31.83125, 34.64050),
-    LatLng(31.83696, 34.65613)
+    LatLng(31.82873 as Angle, 34.65899 as Angle),
+    LatLng(31.81521 as Angle, 34.64238 as Angle),
+    LatLng(31.83125 as Angle, 34.64050 as Angle),
+    LatLng(31.83696 as Angle, 34.65613 as Angle)
   ];
 
   void initialize(BuildContext context) {
@@ -33,7 +33,7 @@ class LocationProvider extends ChangeNotifier {
         (Timer t) async {
       final location = await _getLocation();
       if (location != null) {
-        LatLng latLng = new LatLng(location.latitude, location.longitude);
+        LatLng latLng = new LatLng(location.latitude as Angle, location.longitude as Angle);
         if (_isPointInPolygon(latLng, areaPort)) {
           if (!_inPolygon) {
             _inPolygon = true;
@@ -58,8 +58,8 @@ class LocationProvider extends ChangeNotifier {
         Provider.of<GeneralProvider>(context, listen: false);
 
     DriverGpsTracking driverGpsTracking = new DriverGpsTracking();
-    driverGpsTracking.lat = location.latitude;
-    driverGpsTracking.lng = location.longitude;
+    driverGpsTracking.lat = location.latitude as double?;
+    driverGpsTracking.lng = location.longitude as double?;
     driverGpsTracking.serialNumber = generalProvider.serialNumber;
     driverGpsTracking.trackingDate = DateTime.now();
 
@@ -125,12 +125,12 @@ class LocationProvider extends ChangeNotifier {
   }
 
   bool _rayCastIntersect(LatLng tap, LatLng vertA, LatLng vertB) {
-    double aY = vertA.latitude;
-    double bY = vertB.latitude;
-    double aX = vertA.longitude;
-    double bX = vertB.longitude;
-    double pY = tap.latitude;
-    double pX = tap.longitude;
+    double aY = vertA.latitude as double;
+    double bY = vertB.latitude as double;
+    double aX = vertA.longitude as double;
+    double bX = vertB.longitude as double;
+    double pY = tap.latitude as double;
+    double pX = tap.longitude as double;
 
     if ((aY > pY && bY > pY) || (aY < pY && bY < pY) || (aX < pX && bX < pX)) {
       return false; // a and b can't both be above or below pt.y, and a or

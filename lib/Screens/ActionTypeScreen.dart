@@ -4,8 +4,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:goport/Components/ActionBar.dart';
 import 'package:goport/Dialogs/InputTrackDialog.dart';
 import 'package:goport/Components/TagScrollWidget.dart';
 import 'package:goport/Const/AppColors.dart';
@@ -19,7 +17,6 @@ import 'package:goport/Network/GoPortApi.dart';
 import 'package:goport/Providers/GeneralProvider.dart';
 import 'package:goport/Providers/LocationProvider.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
