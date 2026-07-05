@@ -13,6 +13,7 @@ import 'package:goport/Models/JobCard.dart';
 import 'package:goport/Models/JobCardContainer.dart';
 import 'package:goport/Models/NotTakePhotoReason.dart';
 import 'package:goport/Models/Responses/EventResponse.dart';
+import 'package:goport/Models/Responses/GetDriverByVerifyCodeResponse.dart';
 import 'package:goport/Models/Responses/ShipResponse.dart';
 import 'package:goport/Models/Responses/WarehouseResponse.dart';
 import 'package:goport/Models/SaveContainersToDraft.dart';
@@ -49,10 +50,22 @@ class GoPortApi {
   }
 
   Future<int> getVerifyCode(String serialNumber, String tz,
-      String registrationToken, String clientToken) async {
+      String registrationToken ) async {
+    final headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+
     final operatingSystemTypeID = Platform.isAndroid ? 1 : 2;
-    var response = await http.get(Uri.parse(
-        "$baseURL/api/auth/getVerifyCode?tz=$tz&serialNumber=$serialNumber&clientToken=$clientToken&registrationToken=$registrationToken&operatingSystemTypeID=$operatingSystemTypeID"));
+    var response = await http.post(Uri.parse(
+        "$baseURL/api/auth/getVerifyCodeNew"),
+        headers: headers,
+        body:  {
+      "tz": tz,
+      "serialNumber": serialNumber,
+      "registrationToken": registrationToken,
+      "operatingSystemTypeID": operatingSystemTypeID
+    });
 
     if (response.statusCode == 200) {
       final body = response.body;
@@ -62,18 +75,30 @@ class GoPortApi {
     }
   }
 
-  Future<Driver?> getDriverByVerifyCode(
+  Future<GetDriverByVerifyCodeResponse?> getDriverByVerifyCode(
       String serialNumber, String tz, String verifyCode) async {
-    var response = await http.get(Uri.parse(
-        "$baseURL/api/auth/getDriverByVerifyCode?tz=$tz&serialNumber=$serialNumber&verifyCode=$verifyCode"));
+    final headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+    };
+
+    final body = convert.jsonEncode({
+      "serialNumber": serialNumber,
+      "tz": tz,
+      "verifyCode": verifyCode,
+    });
+
+    var response = await http.post(
+      Uri.parse("$baseURL/api/auth/getDriverByVerifyCodeNew"),
+      headers: headers,
+      body: body,
+    );
 
     if (response.statusCode == 200) {
       if (response.body == "null") {
         return null;
       } else {
         final json = convert.jsonDecode(response.body);
-        final driver = Driver.fromJson(json);
-        return driver;
+        return GetDriverByVerifyCodeResponse.fromJson(json);
       }
     } else {
       return null;

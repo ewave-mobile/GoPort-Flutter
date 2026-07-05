@@ -2,7 +2,7 @@ class Const {
   static final String prefsSerialNumber = "prefsSerialNumber";
   static final String prefsTruck = "prefsTruck";
   static final String prefsTrailer = "prefsTrailer";
-  static final String prefsLastLoginTz = "prefsLastLoginTz";
+  //static final String prefsLastLoginTz = "prefsLastLoginTz";
   static final String prefsLogOn = "prefsLogOn";
   static final String prefsWaitingJobCard = "prefsWaitingJobCard";
 

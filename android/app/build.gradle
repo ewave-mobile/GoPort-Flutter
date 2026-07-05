@@ -37,7 +37,7 @@ android {
     }
     defaultConfig {
         applicationId "ewavemobile.com.goportNew"
-        minSdkVersion 21
+        minSdkVersion flutter.minSdkVersion
         targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

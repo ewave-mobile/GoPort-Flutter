@@ -142,12 +142,11 @@ class _LoginScreenState extends State<LoginScreen> {
     FocusScope.of(context).unfocus();
     final generalProvider =
     Provider.of<GeneralProvider>(context, listen: false);
-    final clientToken = await _getDeviceId(); // Updated this line
+  //  final clientToken = await _getDeviceId(); // Updated this line
     final res = await GoPortApi.instance.getVerifyCode(
         generalProvider.serialNumber ?? "",
         _tzController.text,
-        _deviceToken!,
-        clientToken);
+        _deviceToken! );
 
     setState(() {
       _loading = false;
@@ -164,23 +163,19 @@ class _LoginScreenState extends State<LoginScreen> {
     FocusScope.of(context).unfocus();
     final generalProvider =
     Provider.of<GeneralProvider>(context, listen: false);
-    final clientToken = await _getDeviceId(); // Updated this line
+    //final clientToken = await _getDeviceId(); // Updated this line
 
     if (screenMode == ScreenMode.Login || sendCode) {
       final res = await GoPortApi.instance.getVerifyCode(
           generalProvider.serialNumber ?? "",
           _tzController.text,
-          _deviceToken ?? "",
-          clientToken);
+          _deviceToken ?? ""  );
 
       setState(() {
         _loading = false;
       });
 
-      if (res == 0) {
-        //OK
-        GoPortApi.instance.token = Utils.convertToBase64String(
-            _tzController.text + ":" + clientToken);
+      if (res == 0) {        //OK
         setState(() {
           screenMode = ScreenMode.Otp;
         });
@@ -205,10 +200,13 @@ class _LoginScreenState extends State<LoginScreen> {
         _loading = false;
       });
 
-      if (res == null) {
+      if (res == null || res.driver == null) {
         Utils.showToast(context, AppLocalizations.of(context).translate("Wrong code"));
       } else {
-        generalProvider.driver = res;
+        if (res.token != null) {
+          GoPortApi.instance.token = res.token!;
+        }
+        generalProvider.driver = res.driver;
         if (generalProvider.driver!.blockType! > 0) {
           Utils.showAlertDialog(
               context: context,
@@ -223,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
         } else {
           final SharedPreferences prefs = await _prefs;
           prefs.setString(Const.prefsLogOn, "1");
-          prefs.setString(Const.prefsLastLoginTz, _tzController.text);
+          //prefs.setString(Const.prefsLastLoginTz, _tzController.text);
           generalProvider.setIsLoggedIn(true);
 
           FocusScope.of(context).unfocus();
@@ -312,7 +310,7 @@ class _LoginScreenState extends State<LoginScreen> {
       } else {
         final SharedPreferences prefs = await _prefs;
         prefs.setString(Const.prefsLogOn, "1");
-        prefs.setString(Const.prefsLastLoginTz, _tzController.text);
+        //prefs.setString(Const.prefsLastLoginTz, _tzController.text);
 
         generalProvider.setIsLoggedIn(true);
         if (generalProvider.driver!.populationType == 7) {
